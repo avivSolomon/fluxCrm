@@ -1,34 +1,16 @@
-import { Button, Result } from 'antd';
-
-import useLanguage from '@/locale/useLanguage';
+import { Result } from 'antd';
 
 const About = () => {
-  const translate = useLanguage();
   return (
     <Result
       status="info"
-      title={'IDURAR'}
-      subTitle={translate('Do you need help on customize of this app')}
+      title={'FluxCRM'}
+      subTitle={'Client & Invoice Management'}
       extra={
-        <>
-          <p>
-            Website : <a href="https://www.idurarapp.com">www.idurarapp.com</a>{' '}
-          </p>
-          <p>
-            GitHub :{' '}
-            <a href="https://github.com/idurar/idurar-erp-crm">
-              https://github.com/idurar/idurar-erp-crm
-            </a>
-          </p>
-          <Button
-            type="primary"
-            onClick={() => {
-              window.open(`https://www.idurarapp.com/contact-us/`);
-            }}
-          >
-            {translate('Contact us')}
-          </Button>
-        </>
+        <p style={{ maxWidth: 520, margin: '0 auto' }}>
+          FluxCRM is a client and invoice management system that helps you manage
+          customers, invoices, quotes and payments in one place.
+        </p>
       }
     />
   );

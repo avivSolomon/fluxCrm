@@ -1,6 +1,8 @@
 {
-  "name": "idurar-erp-crm",
+  "name": "fluxcrm-frontend",
   "version": "4.1.0",
+  "author": "FluxCRM",
+  "description": "FluxCRM client and invoice management frontend",
   "engines": {
     "node": "20.9.0",
     "npm": "10.2.4"

@@ -19,7 +19,7 @@ async function setupApp() {
 
     const demoAdmin = {
       email: 'admin@admin.com',
-      name: 'IDURAR',
+      name: 'FluxCRM',
       surname: 'Admin',
       enabled: true,
       role: 'owner',
@@ -51,20 +51,29 @@ async function setupApp() {
 
     console.log('👍 Settings created : Done!');
 
-    const PaymentMode = require('../models/appModels/PaymentMode');
-    const Taxes = require('../models/appModels/Taxes');
+    // These optional models were removed from this (slimmed-down) fork.
+    // Seed their defaults only when the model files are actually present,
+    // so `npm run setup` no longer crashes with MODULE_NOT_FOUND.
+    const path = require('path');
+    const modelsDir = path.join(__dirname, '..', 'models', 'appModels');
 
-    await Taxes.insertMany([{ taxName: 'Tax 0%', taxValue: '0', isDefault: true }]);
-    console.log('👍 Taxes created : Done!');
+    if (fs.existsSync(path.join(modelsDir, 'Taxes.js'))) {
+      const Taxes = require('../models/appModels/Taxes');
+      await Taxes.insertMany([{ taxName: 'Tax 0%', taxValue: '0', isDefault: true }]);
+      console.log('👍 Taxes created : Done!');
+    }
 
-    await PaymentMode.insertMany([
-      {
-        name: 'Default Payment',
-        description: 'Default Payment Mode (Cash , Wire Transfer)',
-        isDefault: true,
-      },
-    ]);
-    console.log('👍 PaymentMode created : Done!');
+    if (fs.existsSync(path.join(modelsDir, 'PaymentMode.js'))) {
+      const PaymentMode = require('../models/appModels/PaymentMode');
+      await PaymentMode.insertMany([
+        {
+          name: 'Default Payment',
+          description: 'Default Payment Mode (Cash , Wire Transfer)',
+          isDefault: true,
+        },
+      ]);
+      console.log('👍 PaymentMode created : Done!');
+    }
 
     console.log('🥳 Setup completed :Success!');
     process.exit();
