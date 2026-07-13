@@ -14,18 +14,10 @@ import {
   SettingOutlined,
   CustomerServiceOutlined,
   ContainerOutlined,
-  FileSyncOutlined,
   DashboardOutlined,
   BarChartOutlined,
-  TagOutlined,
-  TagsOutlined,
-  UserOutlined,
   CreditCardOutlined,
   MenuOutlined,
-  FileOutlined,
-  ShopOutlined,
-  FilterOutlined,
-  WalletOutlined,
   ReconciliationOutlined,
 } from '@ant-design/icons';
 
