@@ -298,5 +298,19 @@ const request = {
       return errorHandler(error);
     }
   },
+
+  analytics: async ({ entity }) => {
+    try {
+      includeToken();
+      const response = await axios.get(`${entity}/analytics`);
+      successHandler(response, {
+        notifyOnSuccess: false,
+        notifyOnFailed: false,
+      });
+      return response.data;
+    } catch (error) {
+      return errorHandler(error);
+    }
+  },
 };
 export default request;

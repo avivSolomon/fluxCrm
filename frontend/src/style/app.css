@@ -9,3 +9,6 @@
 @import './partials/sidePanel.css';
 @import './partials/collapseBox.css';
 @import './partials/erp.css';
+
+/* RTL overrides (Hebrew) — must come last to win specificity */
+@import './partials/rtl.css';

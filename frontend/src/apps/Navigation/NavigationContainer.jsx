@@ -16,6 +16,7 @@ import {
   ContainerOutlined,
   FileSyncOutlined,
   DashboardOutlined,
+  BarChartOutlined,
   TagOutlined,
   TagsOutlined,
   UserOutlined,
@@ -58,6 +59,11 @@ function Sidebar({ collapsible, isMobile = false }) {
       key: 'customer',
       icon: <CustomerServiceOutlined />,
       label: <Link to={'/customer'}>{translate('customers')}</Link>,
+    },
+    {
+      key: 'analytics',
+      icon: <BarChartOutlined />,
+      label: <Link to={'/analytics'}>{translate('analytics')}</Link>,
     },
 
     {

@@ -1,0 +1,57 @@
+/* ============================================================
+   RTL overrides for FluxCRM Hebrew mode.
+   Applied only when <html dir="rtl"> (set by Localization.jsx).
+   Flips the directional rules that were hard-coded for LTR so
+   the fixed sidebar, header and helper classes mirror correctly.
+   ============================================================ */
+
+/* --- main content offset: sidebar moves to the right in RTL --- */
+html[dir='rtl'] .smallNavigation {
+  margin-left: 0;
+  margin-right: 100px;
+}
+html[dir='rtl'] .wideNavigation {
+  margin-left: 0;
+  margin-right: 220px;
+}
+
+/* --- sidebar itself: stick to the right, border on the left --- */
+html[dir='rtl'] .navigation {
+  left: auto;
+  right: 0;
+  border-right: none;
+  border-left: 1px solid #edf0f5;
+}
+html[dir='rtl'] .logo {
+  margin: 15px 30px 30px 15px;
+}
+
+/* --- header: mirror the avatar / profile dropdown spacing --- */
+html[dir='rtl'] .headerIcon.ant-avatar {
+  float: left;
+  margin-left: 0;
+  margin-right: 10px;
+}
+html[dir='rtl'] .headerIcon .last {
+  margin-right: 0;
+  margin-left: 30px;
+}
+html[dir='rtl'] .profileDropdownInfo {
+  float: right;
+  padding-left: 0;
+  padding-right: 15px;
+}
+
+/* --- generic float / align helpers --- */
+html[dir='rtl'] .left {
+  float: right;
+}
+html[dir='rtl'] .right {
+  float: left;
+}
+html[dir='rtl'] .alignRight {
+  text-align: left;
+}
+html[dir='rtl'] .alignLeft {
+  text-align: right;
+}
