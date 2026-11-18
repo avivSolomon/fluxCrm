@@ -54,5 +54,5 @@
   },
   "main": "server.js",
   "author": "FluxCRM",
-  "license": "Fair-code License"
+  "license": "AGPL-3.0"
 }
