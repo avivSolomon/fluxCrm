@@ -53,16 +53,14 @@ if (-not (Test-Path $envFile)) {
     [IO.File]::WriteAllLines($envFile, $lines, (New-Object Text.UTF8Encoding($false)))
 }
 
-# 5) Dependencies (only when missing)
-foreach ($dir in $backend, $frontend) {
-    if (-not (Test-Path (Join-Path $dir 'node_modules'))) {
-        Step ('npm install in ' + (Split-Path -Leaf $dir))
-        Push-Location $dir
-        & npm install --no-audit --no-fund
-        $code = $LASTEXITCODE
-        Pop-Location
-        if ($code -ne 0) { Fail "npm install failed in $dir" }
-    }
+# 5) Backend dependencies (only when missing)
+if (-not (Test-Path (Join-Path $backend 'node_modules'))) {
+    Step 'npm install in backend'
+    Push-Location $backend
+    & npm install --no-audit --no-fund
+    $code = $LASTEXITCODE
+    Pop-Location
+    if ($code -ne 0) { Fail 'npm install failed in backend' }
 }
 
 # 6) Demo data (admin + settings + sample invoices; skipped when already there)
@@ -73,9 +71,19 @@ $code = $LASTEXITCODE
 Pop-Location
 if ($code -ne 0) { Fail 'Demo data preparation failed' }
 
-# 7) Frontend production build (cached in frontend\dist; -Rebuild forces it)
+# 7) Frontend: the built app lives in frontend\dist (shipped in Production.zip).
+#    With the source code it is built once and cached; -Rebuild forces a rebuild.
 if ($Rebuild -or -not (Test-Path (Join-Path $frontend 'dist\index.html'))) {
-    Step 'Building frontend (about a minute)'
+    if (-not (Test-Path (Join-Path $frontend 'package.json'))) { Fail 'frontend\dist is missing and there is no source to build it' }
+    if (-not (Test-Path (Join-Path $frontend 'node_modules'))) {
+        Step 'npm install in frontend'
+        Push-Location $frontend
+        & npm install --no-audit --no-fund
+        $code = $LASTEXITCODE
+        Pop-Location
+        if ($code -ne 0) { Fail 'npm install failed in frontend' }
+    }
+    Step 'Building frontend (about 2 minutes)'
     Push-Location $frontend
     $env:VITE_BACKEND_SERVER = 'http://localhost:8888/'
     & node node_modules/vite/bin/vite.js build
@@ -87,7 +95,7 @@ if ($Rebuild -or -not (Test-Path (Join-Path $frontend 'dist\index.html'))) {
 # 8) Start both servers (minimized windows; stop with scripts\stop-demo.ps1)
 Step 'Starting backend (8888) and frontend (3000)'
 Start-Process -FilePath 'node' -ArgumentList 'src/server.js' -WorkingDirectory $backend -WindowStyle Minimized
-Start-Process -FilePath 'node' -ArgumentList 'node_modules/vite/bin/vite.js preview --port 3000 --strictPort' -WorkingDirectory $frontend -WindowStyle Minimized
+Start-Process -FilePath 'node' -ArgumentList 'scripts/serve-dist.js 3000' -WorkingDirectory $root -WindowStyle Minimized
 
 # 9) Smoke test
 Step 'Smoke test'
