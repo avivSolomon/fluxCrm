@@ -80,6 +80,7 @@ describe('analytics range filter and CSV export', () => {
     const { monthlyRevenue, topClients } = res.body.result;
     expect(monthlyRevenue).toHaveLength(3);
     expect(monthlyRevenue.map((m) => m.total)).toEqual([100, 0, 300]);
+    expect(monthlyRevenue.map((m) => m.period)).toEqual(['2026-01', '2026-02', '2026-03']);
     expect(topClients[0].total).toBe(400);
   });
 

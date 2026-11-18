@@ -62,7 +62,8 @@ const buildAnalytics = async ({ start, end, months }) => {
     const m = moment(start).add(i, 'months');
     const found = monthlyRaw.find((r) => r._id.year === m.year() && r._id.month === m.month() + 1);
     monthlyRevenue.push({
-      label: m.format('MMM YYYY'),
+      label: m.format('MMM YYYY'), // English label (used by the CSV export)
+      period: m.format('YYYY-MM'), // language-neutral key; the screen formats it per UI language
       total: found ? found.total : 0,
       count: found ? found.count : 0,
     });

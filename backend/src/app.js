@@ -20,7 +20,11 @@ const app = express();
 
 app.use(
   cors({
-    origin: true,
+    // Only the FluxCRM frontend may call the API from a browser.
+    // Override with CORS_ORIGINS="https://a.example,https://b.example" when deploying.
+    origin: (process.env.CORS_ORIGINS || 'http://localhost:3000,http://127.0.0.1:3000')
+      .split(',')
+      .map((o) => o.trim()),
     credentials: true,
   })
 );
