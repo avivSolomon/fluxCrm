@@ -1,0 +1,21 @@
+<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><link rel="stylesheet" href="style.css"></head><body>
+<h1>זרימה מקצה לקצה — מנחם: אימות JWT, אגרגציה ובדיקות</h1>
+<div class="lane fe">כניסה למערכת (מהמסך, ללא קוד לקוח חדש)</div>
+<div class="row">
+<div class="box fe"><b>1. טופס התחברות</b>POST /api/login<small>pages/Login</small></div><div class="arrow">←</div>
+<div class="box be"><b>2. אימות סיסמה</b>bcrypt.compare(salt + password)<small>createAuthMiddleware/authUser.js</small></div><div class="arrow">←</div>
+<div class="box db"><b>3. סשן</b>JWT נחתם; נשמר ב-AdminPassword.loggedSessions</div>
+</div>
+<div class="lane be">כל בקשה מוגנת</div>
+<div class="row">
+<div class="box be"><b>4. middleware</b>isValidAuthToken: חתימה + loggedSessions<br>401 אם חסר, לא תקף או התנתקות<small>isValidAuthToken.js</small></div><div class="arrow">←</div>
+<div class="box be"><b>5. aggregation</b>$match → $group → $sort → $limit → $lookup<small>invoiceController/analytics.js</small></div><div class="arrow">←</div>
+<div class="box db"><b>6. MongoDB</b>החישוב מתבצע במסד</div>
+</div>
+<div class="lane t">בדיקות אוטומטיות (Jest + supertest, מסד fluxcrm_test)</div>
+<div class="row">
+<div class="box t"><b>יחידה</b>calculate: 4 בדיקות</div><div class="arrow">+</div>
+<div class="box t"><b>אינטגרציה</b>התחברות · לקוחות · אנליטיקה · שפה: 20 בדיקות</div><div class="arrow">+</div>
+<div class="box t"><b>זרימה מלאה</b>2 תרחישים (אחד לכל תלמיד)</div>
+</div>
+</body></html>
