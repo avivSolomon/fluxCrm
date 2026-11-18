@@ -27,7 +27,7 @@ c.push(center('מגמת הלימוד: הנדסת תוכנה   |   מסלול: [[
 c.push(TABLE([
   ['שם הסטודנט', 'תעודת זהות', 'תחום אחריות'],
   ['מנחם מענדל לאופר', '[[ת"ז — למילוי]]', 'אימות JWT, אגרגציית האנליטיקה בשרת ומערך הבדיקות'],
-  ['רם רחמים משיח', '[[ת"ז — למילוי]]', 'פתרון מקצה לקצה: מסך האנליטיקה, ייצוא CSV, העדפת שפה ורספונסיביות'],
+  ['רם רחמים משיח', '[[ת"ז — למילוי]]', 'פתרון מקצה לקצה: העדפת שפה ו-RTL; מסך האנליטיקה וייצוא CSV; רספונסיביות'],
 ], [2600, 2000, 4400], { size: 22 }));
 c.push(...SPACER(1));
 c.push(center('מנחה אישי: אביב סולומון', { size: 26 }));
@@ -99,13 +99,13 @@ c.push(N(3, '**שכבה רספונסיבית** — קובץ responsive.css וש�
 c.push(N(4, '**מערך בדיקות ו-CI** — בדיקות יחידה, אינטגרציה ושני תרחישי זרימה מלאה, שרצות על Node 20 ו-22 ב-GitHub Actions (פרק 14).'));
 c.push(N(5, '**הפעלה בלחיצה אחת** — start-demo.cmd מכין סביבה, נתונים ובדיקת עשן (נספח ג\').'));
 c.push(H2('4.3 תחום האחריות של כל תלמיד — פתרון מקצה לקצה'));
-c.push(P('לפי נוהל מה"ט, כל תלמיד נבחן על חלקו ועל הבנת הפרויקט כולו. החלוקה: **רם** מציג פתרון מלא מקצה לקצה, מהמסך ועד מסד הנתונים וחזרה; **מנחם** אחראי על ליבת השרת שמזינה את הפתרון — האימות, האגרגציה והבדיקות — ומציג אותה דרך הקוד, ה-API והבדיקות.'));
+c.push(P('לפי נוהל מה"ט, כל תלמיד נבחן על חלקו ועל הבנת הפרויקט כולו. החלוקה: **רם** מציג פתרון מלא מקצה לקצה, מהמסך ועד מסד הנתונים וחזרה. הזרימה הראשית שלו היא **העדפת השפה**: בורר בהדר, בקשת PATCH, בדיקה ב-Joi, שמירה בשדה Admin.language, והחלה בהתחברות הבאה. הזרימה המשנית היא מסך האנליטיקה עם בחירת טווח וייצוא CSV, ועליה נוספת שכבת הרספונסיביות. **מנחם** אחראי על ליבת השרת שמזינה את הפתרון — האימות, האגרגציה והבדיקות — ומציג אותה דרך הקוד, ה-API והבדיקות.'));
 c.push(TABLE([
   ['', 'רם רחמים משיח', 'מנחם מענדל לאופר'],
-  ['הנושא', 'אנליטיקה ודוחות + העדפת שפה + רספונסיביות', 'אימות JWT, אגרגציה ובדיקות'],
-  ['מסך', 'מסך אנליטיקה: בורר טווח, 3 גרפים, כפתור CSV; בורר שפה בהדר', 'מסך ההתחברות (בסיס); אין מסך חדש משלו'],
-  ['API', 'GET analytics, GET analytics/export, PATCH admin/profile/language', 'POST /api/login, middleware isValidAuthToken'],
-  ['לוגיקה ומסד', 'ולידציה (Joi), בניית CSV, Admin.language', 'Aggregation Pipeline על Invoice ו-Client, bcrypt, loggedSessions'],
+  ['הנושא', 'ראשי: העדפת שפה ו-RTL. משני: מסך אנליטיקה וייצוא CSV. בנוסף: רספונסיביות', 'אימות JWT, אגרגציה ובדיקות'],
+  ['מסך', 'בורר שפה בהדר; מסך אנליטיקה: בורר טווח, 3 גרפים, כפתור CSV', 'מסך ההתחברות (בסיס); אין מסך חדש משלו'],
+  ['API', 'PATCH admin/profile/language; GET analytics, GET analytics/export', 'POST /api/login, middleware isValidAuthToken'],
+  ['לוגיקה ומסד', 'Joi על קוד השפה, Admin.language; ולידציית טווח ובניית CSV', 'Aggregation Pipeline על Invoice ו-Client, bcrypt, loggedSessions'],
   ['בדיקות', 'language.test.js (5), ram-language-flow (1), חלק מ-analytics.test.js', 'auth.test.js (3), client.test.js (3), calculate.test.js (4), menahem-analytics-flow (1)'],
   ['הדגמה', 'תרחיש מלא על המסך (ראו מדריך ההגנה)', 'הרצת npm test, הצגת הקוד ותגובת ה-API'],
 ], [1800, 3700, 3500]));
@@ -307,7 +307,7 @@ c.push(H1('12. משאבים נדרשים לפרויקט'));
 c.push(H2('12.1 שעות וחלוקת עבודה בין חברי הצוות'));
 c.push(TABLE([
   ['חבר צוות', 'תחום', 'תרומות עיקריות'],
-  ['רם רחמים משיח', 'מקצה לקצה: אנליטיקה, CSV ושפה', 'מסך האנליטיקה ובורר הטווח, ייצוא CSV, העדפת שפה (בורר, בקר, שדה במסד), RTL, רספונסיביות'],
+  ['רם רחמים משיח', 'מקצה לקצה: שפה, אנליטיקה ו-CSV', 'העדפת שפה (בורר, בקר, שדה במסד) ו-RTL; מסך האנליטיקה ובורר הטווח; ייצוא CSV; רספונסיביות'],
   ['מנחם מענדל לאופר', 'ליבת השרת', 'אימות JWT והתחברות, אגרגציית האנליטיקה, מערך הבדיקות, מודלים וזריעת נתונים'],
 ], [2200, 2400, 4400]));
 c.push(P('היקף העבודה הנדרש לפי הנוהל: 300 שעות להנדסאי. דיווח השעות בפועל לכל תלמיד: [[להשלמה על ידי התלמידים]].', { para: { spacing: { before: 120, line: 360, after: 120 } } }));
@@ -424,15 +424,17 @@ c.push(BR());
 c.push(H1('נספח ב\' — חלוקת קוד ללימוד ולהגנה'));
 c.push(P('הטבלאות ממפות את הקבצים המרכזיים של כל תלמיד ואת מה שעליו להיות מסוגל להסביר. כל תלמיד צריך גם הבנה כללית של כל המערכת, כולל הזרימה של חברו.'));
 c.push(H2('רם רחמים משיח — פתרון מקצה לקצה'));
+c.push(P('הזרימה הראשית (להכיר לעומק, שורה אחרי שורה) מופיעה ראשונה בטבלה; את הזרימה המשנית יש להכיר ברמת הבקשה, הבדיקה וה-CSV, ואת האגרגציה עצמה ברמה בסיסית.'));
 c.push(TABLE([
   ['קובץ / נושא', 'מה להיות מסוגל להסביר'],
-  ['modules/AnalyticsModule/index.jsx', 'שליפת הנתונים, בורר הטווח, מצבי טעינה ושגיאה, שלושת הגרפים, dir="ltr"'],
-  ['request/request.js (analytics, analyticsExport, updateLanguage)', 'שכבת התקשורת: axios, צירוף JWT, הורדת CSV כ-blob'],
-  ['controllers/appControllers/invoiceController/analytics.js (resolveRange, exportCsv)', 'ולידציה ב-Joi, סדרת חודשים רציפה, בניית CSV עם BOM'],
-  ['routes/appRoutes/appApi.js', 'איך נרשמו נתיבי analytics ו-analytics/export'],
-  ['controllers/coreControllers/adminController/updateLanguage.js ו-models/coreModels/Admin.js', 'ולידציית קוד שפה, עדכון Admin.language, ברירת מחדל'],
-  ['apps/Header/LanguageSwitcher.jsx, redux/auth/actions.js', 'שליחת ההעדפה לשרת והחלתה בהתחברות'],
-  ['locale/language.js, locale/translation/he_il.js, style/partials/rtl.css', 'מילון, כיווניות RTL, ConfigProvider'],
+  ['ראשי: apps/Header/LanguageSwitcher.jsx', 'בחירת שפה, קריאה לשרת, והחלה מקומית'],
+  ['ראשי: request/request.js (updateLanguage)', 'בקשת PATCH דרך axios עם JWT'],
+  ['ראשי: controllers/coreControllers/adminController/updateLanguage.js', 'בדיקה ב-Joi (en_us או he_il, אחרת 400), עדכון Admin.language'],
+  ['ראשי: models/coreModels/Admin.js, createAuthMiddleware/authUser.js, redux/auth/actions.js', 'השדה במסד, החזרתו בהתחברות, והחלתו במסך'],
+  ['ראשי: locale/language.js, locale/translation/he_il.js, style/partials/rtl.css', 'מילון, כיווניות RTL, ConfigProvider'],
+  ['משני: modules/AnalyticsModule/index.jsx', 'שליפת הנתונים, בורר הטווח, מצבי טעינה ושגיאה, שלושת הגרפים, dir="ltr"'],
+  ['משני: request/request.js (analytics, analyticsExport)', 'בקשת הנתונים והורדת CSV כ-blob'],
+  ['משני: invoiceController/analytics.js (resolveRange, exportCsv) ו-routes/appRoutes/appApi.js', 'ולידציית טווח, סדרת חודשים רציפה, בניית CSV עם BOM, רישום הנתיבים'],
   ['style/partials/responsive.css, pages/Invoice/index.jsx', 'עמודות responsive, שאילתות מדיה, מאפיינים לוגיים'],
   ['tests/integration/language.test.js, flows/ram-language-flow.test.js', 'מה נבדק ואיך'],
 ], [4300, 4700]));

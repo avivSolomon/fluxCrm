@@ -1,28 +1,25 @@
 <!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><link rel="stylesheet" href="style.css"></head><body>
-<h1>זרימה מקצה לקצה — רם: אנליטיקה, ייצוא CSV והעדפת שפה</h1>
-<div class="lane fe">Frontend</div>
+<h1>זרימה מקצה לקצה — רם</h1>
+<div class="lane fe">זרימה ראשית: העדפת שפה (עברית / אנגלית)</div>
 <div class="row">
-<div class="box fe"><b>1. מסך</b>AnalyticsModule: בורר טווח חודשים, כפתור "ייצוא CSV", גרפים<small>modules/AnalyticsModule/index.jsx</small></div>
+<div class="box fe"><b>1. מסך</b>בורר שפה בהדר<small>apps/Header/LanguageSwitcher.jsx</small></div>
 <div class="arrow">←</div>
-<div class="box fe"><b>2. קריאת API</b>request.analytics / analyticsExport (axios + JWT)<small>request/request.js</small></div>
-</div>
-<div class="lane be">Backend</div>
-<div class="row">
-<div class="box be"><b>3. נתיב + ולידציה</b>GET /api/invoice/analytics?from&amp;to<br>Joi: תאריכים, עד 36 חודשים<small>routes/appRoutes/appApi.js</small></div>
+<div class="box fe"><b>2. קריאת API</b>request.updateLanguage (axios + JWT)<small>request/request.js</small></div>
 <div class="arrow">←</div>
-<div class="box be"><b>4. בקר + לוגיקה</b>3 אגרגציות, סדרת חודשים רציפה, בניית CSV<small>invoiceController/analytics.js</small></div>
+<div class="box be"><b>3. נתיב + בקר</b>PATCH /api/admin/profile/language<br>Joi: en_us | he_il, אחרת 400<small>adminController/updateLanguage.js</small></div>
 </div>
-<div class="lane db">Database</div>
 <div class="row">
-<div class="box db"><b>5. MongoDB</b>Invoice ← $match · $group · $sort · $lookup ← Client</div>
+<div class="box db"><b>4. מסד נתונים</b>Admin.language נשמר ב-MongoDB<small>models/coreModels/Admin.js</small></div>
 <div class="arrow">←</div>
-<div class="box t"><b>6. חזרה למסך</b>JSON ← גרף קו / עוגה / עמודות; או קובץ CSV להורדה</div>
+<div class="box be"><b>5. התחברות הבאה</b>POST /api/login מחזיר language<small>createAuthMiddleware/authUser.js</small></div>
+<div class="arrow">←</div>
+<div class="box fe"><b>6. חזרה למסך</b>השפה מוחלת, המסך עובר ל-RTL<small>redux/auth/actions.js</small></div>
 </div>
-<div class="lane t">העדפת שפה (אותה שרשרת, נתיב אחר)</div>
+<div class="lane t">זרימה משנית: מסך האנליטיקה וייצוא CSV</div>
 <div class="row">
-<div class="box fe"><b>בורר שפה</b>LanguageSwitcher<small>apps/Header</small></div><div class="arrow">←</div>
-<div class="box be"><b>PATCH</b>/api/admin/profile/language<br>Joi: en_us | he_il</div><div class="arrow">←</div>
-<div class="box db"><b>Admin.language</b>נשמר ב-MongoDB</div><div class="arrow">←</div>
-<div class="box fe"><b>התחברות הבאה</b>השרת מחזיר language ← RTL</div>
+<div class="box fe"><b>מסך</b>בורר טווח, 3 גרפים, כפתור CSV<small>modules/AnalyticsModule</small></div><div class="arrow">←</div>
+<div class="box be"><b>API + ולידציה</b>GET /api/invoice/analytics?from&amp;to<br>Joi: עד 36 חודשים<small>invoiceController/analytics.js</small></div><div class="arrow">←</div>
+<div class="box db"><b>אגרגציה במסד</b>סינון, קיבוץ, מיון (פירוט: מנחם)</div><div class="arrow">←</div>
+<div class="box fe"><b>חזרה למסך</b>JSON ← גרפים; או קובץ CSV</div>
 </div>
 </body></html>
