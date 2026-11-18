@@ -1,6 +1,7 @@
 import * as actionTypes from './types';
 import * as authService from '@/auth';
 import { request } from '@/request';
+import { getCurrentLangCode, setLanguage } from '@/locale/language';
 
 export const login =
   ({ loginData }) =>
@@ -23,6 +24,9 @@ export const login =
         type: actionTypes.REQUEST_SUCCESS,
         payload: data.result,
       });
+      // Apply the language saved on the server for this user (reloads if it differs).
+      const savedLang = data.result.language;
+      if (savedLang && savedLang !== getCurrentLangCode()) setLanguage(savedLang);
     } else {
       dispatch({
         type: actionTypes.REQUEST_FAILED,

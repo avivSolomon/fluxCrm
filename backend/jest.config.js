@@ -1,11 +1,23 @@
+const moduleNameMapper = { '^@/(.*)$': '<rootDir>/src/$1' };
+
+// Two projects: unit tests need no database; integration tests use an
+// isolated MongoDB test database (see tests/jest.setup.js).
 module.exports = {
-  testEnvironment: 'node',
-  setupFilesAfterEnv: ['<rootDir>/tests/jest.setup.js'],
-  testMatch: ['**/tests/**/*.test.js'],
   testTimeout: 30000,
   verbose: true,
-  // Resolve the app's "@/..." path alias (mirrors _moduleAliases in package.json).
-  moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/src/$1',
-  },
+  projects: [
+    {
+      displayName: 'unit',
+      testEnvironment: 'node',
+      testMatch: ['<rootDir>/tests/unit/**/*.test.js'],
+      moduleNameMapper,
+    },
+    {
+      displayName: 'integration',
+      testEnvironment: 'node',
+      testMatch: ['<rootDir>/tests/integration/**/*.test.js'],
+      setupFilesAfterEnv: ['<rootDir>/tests/jest.setup.js'],
+      moduleNameMapper,
+    },
+  ],
 };

@@ -18,5 +18,6 @@ methods.summary = summary;
 methods.list = paginatedList;
 methods.read = read;
 methods.analytics = analytics;
+methods.analyticsExport = analytics.exportCsv;
 
 module.exports = methods;

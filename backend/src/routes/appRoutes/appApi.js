@@ -22,6 +22,7 @@ const routerApp = (entity, controller) => {
 
   if (entity === 'invoice') {
     router.route(`/${entity}/analytics`).get(catchErrors(controller['analytics']));
+    router.route(`/${entity}/analytics/export`).get(catchErrors(controller['analyticsExport']));
   }
 
   if (entity === 'quote') {

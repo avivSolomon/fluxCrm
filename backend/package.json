@@ -3,7 +3,7 @@
   "version": "4.1.0",
   "engines": {
     "npm": "10.2.4",
-    "node": "20.9.0"
+    "node": ">=20 <23"
   },
   "scripts": {
     "start": "node src/server.js",
@@ -13,7 +13,8 @@
     "seed": "node src/setup/seedDemoData.js",
     "upgrade": "node src/setup/upgrade.js",
     "reset": "node src/setup/reset.js",
-    "test": "cross-env NODE_ENV=test jest --runInBand --forceExit"
+    "test": "cross-env NODE_ENV=test jest --runInBand --forceExit",
+    "test:unit": "cross-env NODE_ENV=test jest --selectProjects unit"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.509.0",
@@ -29,7 +30,7 @@
     "glob": "10.3.10",
     "html-pdf": "^3.0.1",
     "joi": "^17.11.0",
-    "jsonwebtoken": "^9.0.2",
+    "jsonwebtoken": "^9.0.3",
     "lodash": "^4.17.21",
     "module-alias": "^2.2.3",
     "moment": "^2.30.1",

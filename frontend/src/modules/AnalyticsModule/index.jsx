@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Row, Col, Statistic, Spin, Empty } from 'antd';
+import { Row, Col, Statistic, Spin, Empty, DatePicker, Button, Alert } from 'antd';
+import { DownloadOutlined } from '@ant-design/icons';
+import dayjs from 'dayjs';
 import { Line, Pie, Column } from '@ant-design/plots';
 
 import { request } from '@/request';
@@ -18,6 +20,14 @@ export default function AnalyticsModule() {
   const { moneyFormatter } = useMoney();
 
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [exporting, setExporting] = useState(false);
+  // Default window: the last 12 months (matches the server default).
+  const [range, setRange] = useState([dayjs().subtract(11, 'month').startOf('month'), dayjs()]);
+  const params = {
+    from: range[0].startOf('month').format('YYYY-MM-DD'),
+    to: range[1].format('YYYY-MM-DD'),
+  };
   const [data, setData] = useState({
     monthlyRevenue: [],
     statusBreakdown: [],
@@ -27,12 +37,25 @@ export default function AnalyticsModule() {
   useEffect(() => {
     const fetchAnalytics = async () => {
       setLoading(true);
-      const res = await request.analytics({ entity: 'invoice' });
+      setError(null);
+      const res = await request.analytics({ entity: 'invoice', params });
       if (res && res.success) setData(res.result);
+      else setError((res && res.message) || 'Could not load analytics');
       setLoading(false);
     };
     fetchAnalytics();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params.from, params.to]);
+
+  const onExport = async () => {
+    setExporting(true);
+    await request.analyticsExport({ entity: 'invoice', params });
+    setExporting(false);
+  };
+
+  const onRangeChange = (dates) => {
+    if (dates && dates[0] && dates[1]) setRange(dates);
+  };
 
   const { monthlyRevenue, statusBreakdown, topClients } = data;
 
@@ -84,67 +107,98 @@ export default function AnalyticsModule() {
   const hasClients = topClients.length > 0;
   const hasRevenue = monthlyRevenue.some((m) => m.total > 0);
 
-  if (loading) {
-    return (
-      <div style={{ textAlign: 'center', padding: '80px 0' }}>
-        <Spin size="large" />
-      </div>
-    );
-  }
+  const toolbar = (
+    <div className="analyticsToolbar">
+      <DatePicker.RangePicker
+        picker="month"
+        value={range}
+        onChange={onRangeChange}
+        allowClear={false}
+        disabledDate={(d) => d && d.isAfter(dayjs().endOf('month'))}
+      />
+      <Button icon={<DownloadOutlined />} loading={exporting} onClick={onExport}>
+        {translate('export_csv')}
+      </Button>
+    </div>
+  );
 
   return (
     <>
-      <Row gutter={[32, 32]}>
-        <Col xs={24} md={12}>
-          <div className="whiteBox shadow pad20">
-            <Statistic
-              title={translate('total_revenue_12_months')}
-              value={moneyFormatter({ amount: totalRevenue })}
-            />
-          </div>
-        </Col>
-        <Col xs={24} md={12}>
-          <div className="whiteBox shadow pad20">
-            <Statistic title={translate('Invoices')} value={totalInvoices} />
-          </div>
-        </Col>
-      </Row>
+      {toolbar}
+      {error && <Alert type="error" showIcon message={error} style={{ marginBottom: 24 }} />}
+      {loading ? (
+        <div style={{ textAlign: 'center', padding: '80px 0' }}>
+          <Spin size="large" />
+        </div>
+      ) : (
+        <>
+          <Row gutter={[32, 32]}>
+            <Col xs={24} md={12}>
+              <div className="whiteBox shadow pad20">
+                <Statistic
+                  title={translate('total_revenue_12_months')}
+                  value={moneyFormatter({ amount: totalRevenue })}
+                />
+              </div>
+            </Col>
+            <Col xs={24} md={12}>
+              <div className="whiteBox shadow pad20">
+                <Statistic title={translate('Invoices')} value={totalInvoices} />
+              </div>
+            </Col>
+          </Row>
 
-      <div className="space30"></div>
+          <div className="space30"></div>
 
-      <Row gutter={[32, 32]}>
-        <Col xs={24}>
-          <div className="whiteBox shadow pad20">
-            <h3 style={{ color: '#22075e', marginBottom: 15 }}>
-              {translate('revenue_last_12_months')}
-            </h3>
-            <div dir="ltr">
-              {hasRevenue ? <Line {...lineConfig} /> : <Empty description={translate('No data')} />}
-            </div>
-          </div>
-        </Col>
-      </Row>
+          <Row gutter={[32, 32]}>
+            <Col xs={24}>
+              <div className="whiteBox shadow pad20">
+                <h3 style={{ color: '#22075e', marginBottom: 15 }}>
+                  {translate('revenue_last_12_months')}
+                </h3>
+                <div dir="ltr">
+                  {hasRevenue ? (
+                    <Line {...lineConfig} />
+                  ) : (
+                    <Empty description={translate('No data')} />
+                  )}
+                </div>
+              </div>
+            </Col>
+          </Row>
 
-      <div className="space30"></div>
+          <div className="space30"></div>
 
-      <Row gutter={[32, 32]}>
-        <Col xs={24} lg={12}>
-          <div className="whiteBox shadow pad20" style={{ minHeight: 380 }}>
-            <h3 style={{ color: '#22075e', marginBottom: 15 }}>{translate('invoices_by_status')}</h3>
-            <div dir="ltr">
-              {hasStatus ? <Pie {...pieConfig} /> : <Empty description={translate('No data')} />}
-            </div>
-          </div>
-        </Col>
-        <Col xs={24} lg={12}>
-          <div className="whiteBox shadow pad20" style={{ minHeight: 380 }}>
-            <h3 style={{ color: '#22075e', marginBottom: 15 }}>{translate('top_5_clients')}</h3>
-            <div dir="ltr">
-              {hasClients ? <Column {...columnConfig} /> : <Empty description={translate('No data')} />}
-            </div>
-          </div>
-        </Col>
-      </Row>
+          <Row gutter={[32, 32]}>
+            <Col xs={24} lg={12}>
+              <div className="whiteBox shadow pad20" style={{ minHeight: 380 }}>
+                <h3 style={{ color: '#22075e', marginBottom: 15 }}>
+                  {translate('invoices_by_status')}
+                </h3>
+                <div dir="ltr">
+                  {hasStatus ? (
+                    <Pie {...pieConfig} />
+                  ) : (
+                    <Empty description={translate('No data')} />
+                  )}
+                </div>
+              </div>
+            </Col>
+            <Col xs={24} lg={12}>
+              <div className="whiteBox shadow pad20" style={{ minHeight: 380 }}>
+                <h3 style={{ color: '#22075e', marginBottom: 15 }}>{translate('top_5_clients')}</h3>
+                <div dir="ltr">
+                  {hasClients ? (
+                    <Column {...columnConfig} />
+                  ) : (
+                    <Empty description={translate('No data')} />
+                  )}
+                </div>
+              </div>
+            </Col>
+          </Row>
+        </>
+      )}
     </>
   );
 }

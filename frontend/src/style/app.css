@@ -12,3 +12,17 @@
 
 /* RTL overrides (Hebrew) — must come last to win specificity */
 @import './partials/rtl.css';
+
+/* Analytics toolbar: range picker + export button; stacks on small screens */
+.analyticsToolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 24px;
+}
+@media (max-width: 575px) {
+  .analyticsToolbar > * {
+    width: 100%;
+  }
+}
