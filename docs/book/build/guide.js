@@ -113,7 +113,7 @@ c.push(TABLE([
   ['4. בקר ולוגיקה', 'backend/src/controllers/coreControllers/adminController/updateLanguage.js', 'Joi: en_us או he_il, אחרת 400; עדכון המשתמש המחובר (req.admin)'],
   ['5. מסד', 'backend/src/models/coreModels/Admin.js', 'שדה language עם enum וברירת מחדל en_us'],
   ['6. חזרה למסך', 'createAuthMiddleware/authUser.js ו-frontend/src/redux/auth/actions.js', 'ההתחברות מחזירה language, והלקוח מחיל אותה'],
-  ['בדיקות', 'backend/tests/integration/language.test.js ו-flows/ram-language-flow.test.js', 'שמירה, חזרה בהתחברות, 400 ו-401'],
+  ['בדיקות', 'backend/tests/integration/language.test.js, flows/ram-language-flow.test.js ו-e2e/tests/ram-flow.spec.js', 'שמירה, חזרה בהתחברות, 400 ו-401; ובדפדפן: אותה זרימה על המסך (cd e2e ואז npx playwright test, כשהמערכת רצה)'],
 ], [1500, 3600, 3900]));
 c.push(P('לזרימה המשנית מספיק להראות את AnalyticsModule (בורר הטווח והגרפים), את resolveRange ו-exportCsv ב-analytics.js, ולהסביר את האגרגציה במשפט: "סינון לפי טווח, קיבוץ לפי חודש, מיון — בתוך המסד". הפירוט שלה הוא של מנחם.', { para: { spacing: { before: 120, line: 360, after: 120 } } }));
 
@@ -122,7 +122,7 @@ c.push(H1('6. תסריט ההצגה של מנחם'));
 c.push(P('מנחם מציג את הליבה שמאחורי המסך: אימות, אגרגציה ובדיקות. שלושה חלקים, כל אחד כדקה או שתיים.'));
 c.push(H2('6.1 הרצת הבדיקות'));
 c.push(...CODE('cd backend\nnpm test'));
-c.push(P('התוצאה שנבדקה: 7 חבילות, 27 בדיקות, כולן עברו (גם ב-GitHub Actions על Node 20 ו-22). הסבירו: בדיקות יחידה (calculate, בלי מסד), אינטגרציה מול fluxcrm_test, ושני תרחישי זרימה. הבדיקות דורשות MongoDB פועל.'));
+c.push(P('התוצאה שנבדקה: 8 חבילות, 31 בדיקות, כולן עברו (גם ב-GitHub Actions על Node 20 ו-22). הסבירו: בדיקות יחידה (calculate, בלי מסד), אינטגרציה מול fluxcrm_test, ושני תרחישי זרימה. הבדיקות דורשות MongoDB פועל.'));
 c.push(H2('6.2 אימות: התחברות ובקשה מוגנת (PowerShell)'));
 c.push(...CODE(`$r = Invoke-RestMethod -Method Post -Uri http://localhost:8888/api/login \`
   -ContentType 'application/json' \`
@@ -143,7 +143,7 @@ c.push(...IMG(D('menahem.png'), 15.5, 'הזרימה של מנחם.'));
 c.push(H1('7. "הסבר את הזרימה של חברך"'));
 c.push(P('התרגול: כל אחד מסביר בעל פה, בלי להסתכל, את הזרימה של השני בשלוש דקות, ומצביע על הקבצים. שלד מוצע:'));
 c.push(B('**מנחם על רם:** "בבורר השפה, רם שולח בקשת PATCH עם JWT; השרת בודק ב-Joi שהשפה מותרת, שומר אותה בשדה Admin.language, וההתחברות הבאה מחזירה אותה והמסך עובר ל-RTL. בנוסף הוא בנה את מסך האנליטיקה: בוחרים טווח, השרת בודק אותו ומריץ את האגרגציות שהסברתי, והמסך מצייר גרפים או מוריד CSV."'));
-c.push(B('**רם על מנחם:** "ההתחברות בודקת סיסמה ב-bcrypt ומחזירה JWT, וכל בקשה עוברת ב-middleware שמאמת אותו ובודק שהוא ברשימת הסשנים. האגרגציה מחשבת במסד את הנתונים שהמסך שלי מציג, ו-27 הבדיקות מריצות הכול מול מסד מבודד."'));
+c.push(B('**רם על מנחם:** "ההתחברות בודקת סיסמה ב-bcrypt ומחזירה JWT, וכל בקשה עוברת ב-middleware שמאמת אותו ובודק שהוא ברשימת הסשנים. האגרגציה מחשבת במסד את הנתונים שהמסך שלי מציג, ו-31 הבדיקות מריצות הכול מול מסד מבודד."'));
 c.push(P('אם מנחם לא יוכל להגיע להגנה, רם צריך לדעת להסביר את האגרגציה ואת ה-JWT לפחות ברמה הזו; השאלות ב-Q&A בסעיף 5 מכסות אותן.', { para: { spacing: { before: 120, line: 360, after: 120 } } }));
 
 // 8 ---------------------------------------------------

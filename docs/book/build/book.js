@@ -89,14 +89,14 @@ c.push(TABLE([
   ['הזדהות', 'התחברות JWT, bcrypt, loggedSessions', 'הגבלת קצב על התחברות, החזרת 401 על טוקן פגום, שפה שנשמרת בחשבון'],
   ['אנליטיקה', 'כרטיסי סיכום בלבד', 'נקודת קצה עם 3 אגרגציות, בחירת טווח (Joi), ייצוא CSV, מסך עם 3 גרפים'],
   ['שפה', 'מנגנון תרגום מנוטרל (אנגלית בלבד)', 'הפעלה מחדש, מילון עברי של כ-200 מפתחות, בורר שפה, RTL, שמירה בשרת'],
-  ['בדיקות', 'אין', '27 בדיקות אוטומטיות (Jest + supertest) ו-CI ב-GitHub Actions'],
+  ['בדיקות', 'אין', '31 בדיקות שרת (Jest + supertest), 3 בדיקות דפדפן (Playwright) ו-CI ב-GitHub Actions'],
   ['הפעלה', 'התקנה ידנית דרך Atlas', 'start-demo.cmd, seed קבוע, בדיקת עשן, חבילות Source ו-Production'],
 ], [2200, 3000, 3800]));
 c.push(H2('4.2 התוספות המקוריות'));
 c.push(N(1, '**אנליטיקה מקצה לקצה** — נקודת קצה GET /api/invoice/analytics (אגרגציות MongoDB, ולידציית טווח), נקודת קצה לייצוא CSV, ומסך עם גרפים ובורר טווח חודשים (פרק 10).'));
 c.push(N(2, '**העדפת שפה ו-RTL** — בורר שפה בהדר שמעדכן את המשתמש בשרת (PATCH /api/admin/profile/language), נשמר בשדה Admin.language ונטען בהתחברות הבאה; כולל מילון עברי והתאמות RTL.'));
 c.push(N(3, '**שכבה רספונסיבית** — קובץ responsive.css ושינויי מסכים כך שהמערכת שמישה ב-390px (טלפון), 768px (טאבלט) ובמחשב; טבלאות, כותרות וטפסים מסתדרים מחדש (נספח א\').'));
-c.push(N(4, '**מערך בדיקות ו-CI** — בדיקות יחידה, אינטגרציה ושני תרחישי זרימה מלאה, שרצות על Node 20 ו-22 ב-GitHub Actions (פרק 14).'));
+c.push(N(4, '**מערך בדיקות ו-CI** — בדיקות יחידה, אינטגרציה, אבטחה ושני תרחישי זרימה מלאה בשרת, ועוד בדיקת דפדפן אוטומטית (Playwright) לזרימה של רם; הכול רץ ב-GitHub Actions (פרק 14).'));
 c.push(N(5, '**הפעלה בלחיצה אחת** — start-demo.cmd מכין סביבה, נתונים ובדיקת עשן (נספח ג\').'));
 c.push(H2('4.3 תחום האחריות של כל תלמיד — פתרון מקצה לקצה'));
 c.push(P('לפי נוהל מה"ט, כל תלמיד נבחן על חלקו ועל הבנת הפרויקט כולו. החלוקה: **רם** מציג פתרון מלא מקצה לקצה, מהמסך ועד מסד הנתונים וחזרה. הזרימה הראשית שלו היא **העדפת השפה**: בורר בהדר, בקשת PATCH, בדיקה ב-Joi, שמירה בשדה Admin.language, והחלה בהתחברות הבאה. הזרימה המשנית היא מסך האנליטיקה עם בחירת טווח וייצוא CSV, ועליה נוספת שכבת הרספונסיביות. **מנחם** אחראי על ליבת השרת שמזינה את הפתרון — האימות, האגרגציה והבדיקות — ומציג אותה דרך הקוד, ה-API והבדיקות.'));
@@ -106,7 +106,7 @@ c.push(TABLE([
   ['מסך', 'בורר שפה בהדר; מסך אנליטיקה: בורר טווח, 3 גרפים, כפתור CSV', 'מסך ההתחברות (בסיס); אין מסך חדש משלו'],
   ['API', 'PATCH admin/profile/language; GET analytics, GET analytics/export', 'POST /api/login, middleware isValidAuthToken'],
   ['לוגיקה ומסד', 'Joi על קוד השפה, Admin.language; ולידציית טווח ובניית CSV', 'Aggregation Pipeline על Invoice ו-Client, bcrypt, loggedSessions'],
-  ['בדיקות', 'language.test.js (5), ram-language-flow (1), חלק מ-analytics.test.js', 'auth.test.js (3), client.test.js (3), calculate.test.js (4), menahem-analytics-flow (1)'],
+  ['בדיקות', 'language.test.js (5), ram-language-flow (1), חלק מ-analytics.test.js; בדיקת דפדפן e2e/ram-flow.spec.js (3)', 'auth.test.js (3), client.test.js (3), security.test.js (4), calculate.test.js (4), menahem-analytics-flow (1)'],
   ['הדגמה', 'תרחיש מלא על המסך (ראו מדריך ההגנה)', 'הרצת npm test, הצגת הקוד ותגובת ה-API'],
 ], [1800, 3700, 3500]));
 c.push(P('**שינוי מול הצעת הפרויקט:** בהצעה החלוקה הייתה לפי שכבות (מנחם — Backend, רם — Frontend). במהלך העבודה עברנו לחלוקה לפי זרימות מקצה לקצה, כדי שכל תלמיד יוכל להציג פתרון שלם, כנדרש בהגנה. הדרישות הפונקציונליות F1 עד F10 מההצעה ממומשות כולן; F11 ו-F12 נוספו (פרק 5.2).', { para: { spacing: { before: 120, line: 360, after: 120 } } }));
@@ -122,7 +122,7 @@ c.push(B('**סביבת הרצה:** Node.js 20 או 22 (נבדק ב-CI; רץ גם
 c.push(B('**פריסה:** הרצה מקומית או בענן. ההדגמה: שרת ב-8888, ממשק ב-3000, מסד ב-27017, בלי שירותים חיצוניים. ספריות openai, resend ו-AWS S3 קיימות בבסיס ואינן נדרשות להדגמה.'));
 c.push(B('**ביצועים:** סיכומי האנליטיקה מחושבים במסד (Aggregation Pipeline) ולא בקוד היישום, כדי לצמצם העברת נתונים. לא בוצעו מדידות עומס; ראו פרק 16.'));
 c.push(B('**שרידות:** מחיקה רכה (removed: true) במקום מחיקה פיזית.'));
-c.push(B('**עומסים:** דחיסת תגובות (compression), והגבלת קצב של 20 ניסיונות התחברות ל-15 דקות (express-rate-limit).'));
+c.push(B('**עומסים:** דחיסת תגובות (compression), והגבלת קצב של 20 ניסיונות התחברות ל-15 דקות (express-rate-limit; ניתן לשינוי במשתנה LOGIN_RATE_LIMIT לצורך בדיקות אוטומטיות).'));
 c.push(B('**אבטחה:** הזדהות חובה לכל נקודות ה-API פרט להתחברות ולהחלפת סיסמה; סיסמאות מוצפנות ב-bcrypt.'));
 c.push(B('**תצוגה:** שימושי ברוחב 390px, 768px ובמחשב, באנגלית ובעברית (RTL).'));
 c.push(H2('5.2 דרישות פונקציונליות'));
@@ -158,6 +158,8 @@ c.push(TABLE([
   ['P9', 'במסך טלפון כפתור התפריט תפס עמודה של 74px והדף נדחק הצידה', 'UI רספונסיבי', 'מיקום מוחלט בקצה ההתחלה (inset-inline-start) ב-responsive.css'],
   ['P10', 'אימוג\'י הדגל בבורר השפה מוצג ב-Windows כאותיות "us"', 'UI', 'תוויות EN ו-HE במקום דגלים'],
   ['P11', 'הנתונים האקראיים של ה-seed שינו את המספרים בכל הרצה, וצילומי המסך לא תאמו את ההדגמה', 'הדגמה', 'מחולל מספרים דטרמיניסטי (mulberry32)'],
+  ['P12', 'בדיקות הדפדפן נכשלו אחרי כמה הרצות: הגבלת הקצב על ההתחברות (20 ל-15 דקות) חסמה אותן', 'בדיקות', 'משתנה LOGIN_RATE_LIMIT שמועלה רק בהרצת בדיקות; בהדגמה נשאר 20'],
+  ['P13', 'תוויות החודשים בגרף הוצגו באנגלית גם בעברית', 'UI', 'השרת מחזיר מפתח ניטרלי (period: YYYY-MM) והמסך מעצב אותו לפי שפת הממשק (Intl.DateTimeFormat)'],
 ], [600, 3700, 1400, 3300]));
 c.push(P('**חלופות שנשקלו ל-P3:** (א) הגבלת זיכרון ל-Docker דרך .wslconfig, (ב) חשבון ענן MongoDB Atlas, (ג) התקנה מקומית כשירות. נבחרה (ג): הקלה ביותר על משאבי המחשב, ללא תלות ברשת וללא עלות.', { para: { spacing: { before: 120, line: 360, after: 120 } } }));
 c.push(P('**חלופות שנשקלו ל-P7:** (א) הורדת גרסת Node ל-20 או 22, (ב) נעילת engines בלבד, (ג) שדרוג התלות. נבחר שילוב של (ג) ושל נעילה לטווח הנבדק, כי השדרוג מתקן את השורש ומשאיר את המערכת עובדת גם בגרסאות חדשות.'));
@@ -173,7 +175,7 @@ c.push(TABLE([
   ['Frontend', 'React 18.3, Redux Toolkit 2.2, Ant Design 5.14, React Router 6.22, Vite 5.4, axios 1.6, Ant Design Plots 2.6, dayjs', 'JavaScript / JSX'],
   ['Backend', 'Node.js 20-22, Express 4.18, Mongoose 8.1, jsonwebtoken 9.0.3, bcryptjs 2.4, Joi 17', 'JavaScript'],
   ['Database', 'MongoDB (נבדק 9.0 מקומית, 7 ב-CI)', '—'],
-  ['בדיקות ו-CI', 'Jest 30, supertest 7, GitHub Actions', 'JavaScript / YAML'],
+  ['בדיקות ו-CI', 'Jest 30, supertest 7, Playwright 1.49 (דפדפן), GitHub Actions', 'JavaScript / YAML'],
   ['הפעלה', 'PowerShell 5.1, שרת סטטי ב-Node (scripts/serve-dist.js)', 'PowerShell / JavaScript'],
 ], [1500, 5600, 1900]));
 c.push(H2('7.3 תיאור הארכיטקטורה'));
@@ -186,7 +188,7 @@ c.push(TABLE([
   ['SPA + REST API (שלוש שכבות)', 'הפרדת אחריות, חוויה עשירה, קל לבדיקה (supertest)', 'ניהול מצב בלקוח, CORS ואימות טוקן', 'נבחרה'],
 ], [2400, 2200, 3300, 1100]));
 c.push(H2('7.4 חלוקה לתוכניות ומודולים'));
-c.push(P('**Backend (backend/src):** models (סכמות Mongoose), controllers (לוגיקה: coreControllers, appControllers, middlewaresControllers), routes (נתיבי API), middlewares, setup (אתחול, seed, ensureDemo). **Frontend (frontend/src):** pages (מסכים), modules (רכיבי-על: AnalyticsModule, ErpPanelModule, InvoiceModule), redux, locale (תרגום), router, request (שכבת axios), style (כולל rtl.css ו-responsive.css). **תפעול:** scripts (הפעלה, עצירה, בדיקת עשן), .github/workflows (CI).'));
+c.push(P('**Backend (backend/src):** models (סכמות Mongoose), controllers (לוגיקה: coreControllers, appControllers, middlewaresControllers), routes (נתיבי API), middlewares, setup (אתחול, seed, ensureDemo). **Frontend (frontend/src):** pages (מסכים), modules (רכיבי-על: AnalyticsModule, ErpPanelModule, InvoiceModule), redux, locale (תרגום), router, request (שכבת axios), style (כולל rtl.css ו-responsive.css). **תפעול:** scripts (הפעלה, עצירה, בדיקת עשן), e2e (בדיקות דפדפן), .github/workflows (CI).'));
 c.push(H2('7.5 סביבת השרת'));
 c.push(P('בפיתוח ובהדגמה: Node מקומי ו-MongoDB כשירות Windows. start-demo.cmd מוודא Node 20 ומעלה ו-MongoDB, יוצר את backend/.env (עם מפתח JWT אקראי), מכין נתוני דוגמה, בונה את הלקוח, מפעיל את השרת בפורט 8888 ואת הממשק בפורט 3000 ומריץ בדיקת עשן.'));
 c.push(H2('7.6 ממשק המשתמש (GUI)'));
@@ -285,7 +287,8 @@ c.push(TABLE([
   ['טוקן פגום או פג תוקף', 'שגיאת שרת במקום דחייה', 'JsonWebTokenError ו-TokenExpiredError מחזירים 401 (נבדק)'],
   ['ניחוש סיסמאות', 'brute force', 'express-rate-limit על /api/login: 20 ניסיונות ל-15 דקות'],
   ['סודות', 'דליפת JWT_SECRET', 'מפתח אקראי; .env מחוץ ל-Git; start-demo מייצר מפתח חדש לכל התקנה'],
-  ['קלט', 'פרמטרים זדוניים', 'Joi על אנליטיקה ושפה; paginatedList דוחה ערכי אובייקט בפרמטר filter (תיקון מהבסיס)'],
+  ['קלט', 'הזרקת אופרטורים (NoSQL injection)', 'Joi על אנליטיקה ושפה; paginatedList ו-/filter דוחים ערכי אובייקט (400) — נבדק ב-security.test.js'],
+  ['דפדפן', 'קריאה ל-API מאתר זר', 'CORS עם רשימת מקורות מותרים (ברירת מחדל localhost:3000; CORS_ORIGINS לפריסה) — נבדק'],
   ['חבילות', 'פגיעות ידועה', 'multer 1.4.5-lts.2 (תיקון CVE-2022-24434); jsonwebtoken 9.0.3'],
 ], [1800, 2400, 4800]));
 c.push(P('**תרחישים:** (1) בקשה ל-/api/client/list ללא טוקן ← 401 (נבדק). (2) משתמש התנתק ותוקף משתמש בטוקן הישן ← 401 (נבדק ב-ram-language-flow). (3) בקשת שפה "xx" ← 400 והערך אינו משתנה (נבדק).', { para: { spacing: { before: 120, line: 360, after: 120 } } }));
@@ -298,8 +301,7 @@ c.push(TABLE([
 ], [2300, 2300, 3300, 1100]));
 c.push(P('לאחסון סיסמאות נדחו טקסט גלוי והצפנה הפיכה; נבחר גיבוב חד-כיווני bcrypt עם salt.'));
 c.push(H2('11.2 מגבלות אבטחה ידועות'));
-c.push(B('נקודת הקצה /api/<entity>/filter (מהבסיס) אינה מסננת אופרטורים של MongoDB בפרמטרים, בניגוד ל-paginatedList.'));
-c.push(B('הגבלת הקצב חלה על ההתחברות בלבד, ו-CORS מוגדר origin: true (כל מקור); נדרשת הקשחה בפריסה לציבור.'));
+c.push(B('הגבלת הקצב חלה על ההתחברות בלבד; אין HTTPS בהדגמה המקומית. נדרשת הקשחה בפריסה לציבור.'));
 c.push(B('הסיסמה ההתחלתית של מנהל ההדגמה (admin123) מיועדת להדגמה בלבד.'));
 
 // ---------------- 12 ----------------
@@ -331,14 +333,14 @@ c.push(TABLE([
   ['5', 'אנליטיקה: שרת, מסך, טווח וייצוא CSV', 'תוספת #1'],
   ['6', 'עברית ו-RTL, והעדפת שפה שנשמרת בשרת', 'תוספת #2'],
   ['7', 'רספונסיביות לטלפון ולטאבלט', 'תוספת #3'],
-  ['8', 'מערך בדיקות (27) ו-CI ב-GitHub Actions', 'תוספת #4'],
+  ['8', 'מערך בדיקות (31 בשרת, 3 בדפדפן) ו-CI ב-GitHub Actions', 'תוספת #4'],
   ['9', 'הפעלה בלחיצה אחת, seed קבוע, בדיקת עשן, חבילות הגשה', 'חבילות Source ו-Production'],
   ['10', 'ספר פרויקט, מדריך והכנה להגנה', 'ספר, מדריך ושו"ת'],
 ], [800, 5000, 3200]));
 
 // ---------------- 14 ----------------
 c.push(H1('14. תכנון הבדיקות'));
-c.push(P('הבדיקות רצות ב-Jest עם supertest מול מסד נתונים בדיקות מבודד (fluxcrm_test), ומנוקות בין בדיקה לבדיקה. הרצה: npm test בתיקיית backend. **תוצאה: 7 חבילות, 27 בדיקות — כולן עברו**, מקומית ו-GitHub Actions (Node 20 ו-22).'));
+c.push(P('הבדיקות רצות ב-Jest עם supertest מול מסד נתונים בדיקות מבודד (fluxcrm_test), ומנוקות בין בדיקה לבדיקה. הרצה: npm test בתיקיית backend. **תוצאה: 8 חבילות, 31 בדיקות — כולן עברו**, מקומית ו-GitHub Actions (Node 20 ו-22). בנוסף 3 בדיקות דפדפן אוטומטיות (Playwright) — עברו מקומית (Edge) וב-CI (Chromium).'));
 c.push(H2('14.1 בדיקות תהליכיות ברמת משתמש (Full Flow)'));
 c.push(TABLE([
   ['#', 'תרחיש', 'קלט', 'תוצאה מצופה'],
@@ -357,12 +359,14 @@ c.push(TABLE([
   ['integration/client.test.js', '3', 'יצירת לקוח, דחיית בקשה ללא טוקן ועם טוקן פגום'],
   ['integration/analytics.test.js', '10', 'סדרת 12 חודשים, סינון טווח, 4 סוגי קלט שגוי (400), ייצוא CSV, דרישת אימות'],
   ['integration/language.test.js', '5', 'שמירת שפה, חזרתה בהתחברות, דחיית ערך לא תקין וחסר, דרישת אימות'],
+  ['integration/security.test.js', '4', 'דחיית אופרטור ב-/filter (400), ערך רגיל עובר, CORS מאשר את הממשק ודוחה מקור זר'],
   ['integration/flows/*.test.js', '2', 'שני תרחישי הזרימה המלאה (T5 ו-T6)'],
+  ['e2e/tests/ram-flow.spec.js (דפדפן)', '3', 'זרימת השפה במסך: בחירה, שמירה בשרת, חזרה אחרי התחברות מחדש; רוחב טלפון ללא גלילה אופקית; מסך האנליטיקה ובקשת ה-CSV'],
 ], [3300, 1500, 4200]));
 c.push(H2('14.3 בדיקות עשן והדגמה'));
 c.push(P('הסקריפט scripts/smoke-test.ps1 מריץ 8 בדיקות על מערכת רצה: טעינת הממשק, התחברות, 401 ללא טוקן, רשימת לקוחות, אנליטיקה, ייצוא CSV, 400 לטווח שגוי ושמירת שפה. הוא רץ אוטומטית בסוף start-demo.cmd.'));
 c.push(H2('14.4 מה לא נבדק אוטומטית'));
-c.push(B('צד הלקוח: אין בדיקות רכיבים או בדיקות דפדפן אוטומטיות. התצוגה הרספונסיבית ותרחיש הדגמה נבדקו ידנית בדפדפן ב-390px, 768px ובמחשב, באנגלית ובעברית.'));
+c.push(B('צד הלקוח: אין בדיקות רכיבים; בדיקות הדפדפן מכסות את הזרימה של רם בלבד. בחירת טווח בבורר והתצוגה ב-768px נבדקו ידנית.'));
 c.push(B('לא נבדקו עומסים ו-lint מלא של קבצי הבסיס (131 שגיאות ישנות); ה-CI מריץ lint על הקבצים שפותחו בפרויקט.'));
 
 // ---------------- 15 ----------------
@@ -376,19 +380,18 @@ c.push(P('[[מומלץ: כל תלמיד יוסיף למאגר commits אישיי
 // ---------------- 16 ----------------
 c.push(H1('16. מגבלות ופיתוחים עתידיים'));
 c.push(H2('16.1 מגבלות ידועות'));
-c.push(B('אין בדיקות אוטומטיות לצד הלקוח ובדיקות E2E בדפדפן.'));
+c.push(B('בדיקות הדפדפן מכסות רק את הזרימה של רם; אין בדיקות רכיבים לצד הלקוח.'));
 c.push(B('לא בוצעו מדידות ביצועים ועומסים; הטענה "החישוב במסד" נשענת על עקרון ולא על מדידה.'));
-c.push(B('כתוויות החודשים בגרף מוצגות באנגלית (Dec 2025) גם בממשק העברי.'));
 c.push(B('החלפת שפה טוענת את הדף מחדש, וההדגמה דורשת MongoDB מקומי.'));
 c.push(B('בטלפון, עמודת הסטטוס ברשימות מוצגת בתוך תא הלקוח, ובטלפון חלק מהעמודות מוסתרות.'));
-c.push(B('יצירת חשבונית אינה אטומית (כמה כתיבות עוקבות); נקודת filter מהבסיס אינה מסננת אופרטורים; CORS פתוח לכל מקור.'));
+c.push(B('יצירת חשבונית אינה אטומית (כמה כתיבות עוקבות).'));
 c.push(B('שירותי openai, resend ו-S3 הקיימים בבסיס אינם בשימוש ואינם נבדקו.'));
 c.push(H2('16.2 פיתוחים עתידיים'));
-c.push(B('בדיקות Playwright לתרחישי המסך, ובדיקות רכיבים לצד הלקוח.'));
+c.push(B('הרחבת בדיקות הדפדפן לכל המסכים, ובדיקות רכיבים לצד הלקוח.'));
 c.push(B('פיצול ה-bundle (כיום קובץ אחד של כ-1.4MB) וטעינה עצלה של מסכים.'));
-c.push(B('הקשחת אבטחה לפריסה ציבורית: CORS מוגבל, Rate-limit כללי, HTTPS.'));
+c.push(B('הקשחת אבטחה לפריסה ציבורית: Rate-limit כללי ו-HTTPS.'));
 c.push(B('אנליטיקה מתקדמת: השוואה בין תקופות, חיזוי הכנסות, ייצוא PDF.'));
-c.push(B('טרנזקציות MongoDB ליצירת חשבונית, ותרגום תוויות הגרפים.'));
+c.push(B('טרנזקציות MongoDB ליצירת חשבונית.'));
 
 // ---------------- 17 ----------------
 c.push(H1('17. ביבליוגרפיה'));
@@ -436,7 +439,7 @@ c.push(TABLE([
   ['משני: request/request.js (analytics, analyticsExport)', 'בקשת הנתונים והורדת CSV כ-blob'],
   ['משני: invoiceController/analytics.js (resolveRange, exportCsv) ו-routes/appRoutes/appApi.js', 'ולידציית טווח, סדרת חודשים רציפה, בניית CSV עם BOM, רישום הנתיבים'],
   ['style/partials/responsive.css, pages/Invoice/index.jsx', 'עמודות responsive, שאילתות מדיה, מאפיינים לוגיים'],
-  ['tests/integration/language.test.js, flows/ram-language-flow.test.js', 'מה נבדק ואיך'],
+  ['tests/integration/language.test.js, flows/ram-language-flow.test.js, e2e/tests/ram-flow.spec.js', 'מה נבדק ואיך, בשרת ובדפדפן'],
 ], [4300, 4700]));
 c.push(H2('מנחם מענדל לאופר — ליבת השרת'));
 c.push(TABLE([
@@ -446,7 +449,7 @@ c.push(TABLE([
   ['createAuthMiddleware/authUser.js, models/coreModels/AdminPassword.js', 'bcrypt ו-salt, חתימת JWT, פרטי התשובה'],
   ['routes/coreRoutes/coreAuth.js', 'הגבלת קצב על ההתחברות'],
   ['models/appModels (Client, Invoice, Payment)', 'סכמות, ref ו-autopopulate, מחיקה רכה'],
-  ['tests/ (jest.config.js, jest.setup.js, helpers)', 'unit מול integration, מסד בדיקות מבודד, supertest'],
+  ['tests/ (jest.config.js, jest.setup.js, helpers, security.test.js)', 'unit מול integration, מסד בדיקות מבודד, supertest, בדיקות ההקשחה'],
   ['setup/seedDemoData.js, setup/ensureDemo.js', 'נתוני דוגמה דטרמיניסטיים; הכנה בטוחה להרצה חוזרת'],
 ], [4300, 4700]));
 
