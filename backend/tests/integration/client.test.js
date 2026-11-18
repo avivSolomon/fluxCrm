@@ -28,6 +28,13 @@ describe('Client API (CRUD, authenticated)', () => {
     expect(names).toContain('Acme Corp');
   });
 
+  test('rejects a malformed token with 401 (not 500)', async () => {
+    const res = await request(app)
+      .get('/api/client/list')
+      .set('Authorization', 'Bearer not-a-real-token');
+    expect(res.status).toBe(401);
+  });
+
   test('rejects requests without an auth token', async () => {
     const res = await request(app).get('/api/client/list');
     expect(res.status).toBe(401);

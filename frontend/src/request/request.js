@@ -299,15 +299,49 @@ const request = {
     }
   },
 
-  analytics: async ({ entity }) => {
+  analytics: async ({ entity, params }) => {
     try {
       includeToken();
-      const response = await axios.get(`${entity}/analytics`);
+      const response = await axios.get(`${entity}/analytics`, { params });
       successHandler(response, {
         notifyOnSuccess: false,
         notifyOnFailed: false,
       });
       return response.data;
+    } catch (error) {
+      return errorHandler(error);
+    }
+  },
+
+  // Save the signed-in user's preferred UI language on the server.
+  updateLanguage: async ({ language }) => {
+    try {
+      includeToken();
+      const response = await axios.patch('admin/profile/language', { language });
+      successHandler(response, { notifyOnSuccess: false, notifyOnFailed: true });
+      return response.data;
+    } catch (error) {
+      return errorHandler(error);
+    }
+  },
+
+  // Download the analytics CSV for the selected date range (authenticated, so via axios blob).
+  analyticsExport: async ({ entity, params }) => {
+    try {
+      includeToken();
+      const response = await axios.get(`${entity}/analytics/export`, {
+        params,
+        responseType: 'blob',
+      });
+      const url = window.URL.createObjectURL(new Blob([response.data], { type: 'text/csv' }));
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'fluxcrm-analytics.csv';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+      return { success: true };
     } catch (error) {
       return errorHandler(error);
     }

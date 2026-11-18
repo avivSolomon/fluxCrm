@@ -25,6 +25,8 @@ router
     catchErrors(adminController.updateProfile)
   );
 
+router.route('/admin/profile/language').patch(catchErrors(adminController.updateLanguage));
+
 // //____________________________________________ API for Global Setting _________________
 
 router.route('/setting/create').post(catchErrors(settingController.create));

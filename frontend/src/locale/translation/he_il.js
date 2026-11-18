@@ -163,6 +163,7 @@ const he_il = {
   recent_quotes: 'הצעות מחיר אחרונות',
   revenue_last_12_months: 'הכנסות ב-12 החודשים האחרונים',
   invoices_by_status: 'פילוח חשבוניות לפי סטטוס',
+  export_csv: 'ייצוא ל-CSV',
   top_5_clients: '5 הלקוחות המובילים',
   total_revenue_12_months: 'סה"כ הכנסות (12 חודשים)',
   active_customer: 'לקוחות פעילים',

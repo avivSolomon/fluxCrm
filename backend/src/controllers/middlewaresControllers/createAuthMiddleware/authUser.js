@@ -46,6 +46,7 @@ const authUser = async (req, res, { user, databasePassword, password, UserPasswo
         role: user.role,
         email: user.email,
         photo: user.photo,
+        language: user.language || 'en_us',
         token: token,
         maxAge: req.body.remember ? 365 : null,
       },

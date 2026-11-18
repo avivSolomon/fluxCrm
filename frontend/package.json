@@ -4,8 +4,7 @@
   "author": "FluxCRM",
   "description": "FluxCRM client and invoice management frontend",
   "engines": {
-    "node": "20.9.0",
-    "npm": "10.2.4"
+    "node": ">=20 <23"
   },
   "type": "module",
   "dependencies": {
@@ -34,6 +33,7 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "lint:own": "eslint src/modules/AnalyticsModule src/apps/Header/LanguageSwitcher.jsx src/redux/auth/actions.js --ext js,jsx --max-warnings 0",
     "preview": "vite preview",
     "dev:remote": "cross-env VITE_DEV_REMOTE=remote npm run dev"
   },
