@@ -4,8 +4,8 @@
 export const LANG_STORAGE_KEY = 'fluxcrm_language';
 
 export const LANGUAGES = [
-  { code: 'en_us', label: 'English', flag: '🇺🇸', dir: 'ltr' },
-  { code: 'he_il', label: 'עברית', flag: '🇮🇱', dir: 'rtl' },
+  { code: 'en_us', label: 'English', flag: 'EN', dir: 'ltr' },
+  { code: 'he_il', label: 'עברית', flag: 'HE', dir: 'rtl' },
 ];
 
 export const DEFAULT_LANG_CODE = 'en_us';

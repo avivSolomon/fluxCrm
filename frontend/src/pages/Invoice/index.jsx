@@ -30,6 +30,7 @@ export default function Invoice() {
     {
       title: translate('Date'),
       dataIndex: 'date',
+      responsive: ['md'],
       render: (date) => {
         return dayjs(date).format(dateFormat);
       },
@@ -37,6 +38,7 @@ export default function Invoice() {
     {
       title: translate('expired Date'),
       dataIndex: 'expiredDate',
+      responsive: ['md'],
       render: (date) => {
         return dayjs(date).format(dateFormat);
       },
@@ -60,6 +62,7 @@ export default function Invoice() {
     {
       title: translate('paid'),
       dataIndex: 'credit',
+      responsive: ['md'],
       onCell: () => {
         return {
           style: {
@@ -78,6 +81,7 @@ export default function Invoice() {
     {
       title: translate('Payment'),
       dataIndex: 'paymentStatus',
+      responsive: ['md'],
     },
   ];
 

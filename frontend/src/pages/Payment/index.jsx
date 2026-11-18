@@ -44,6 +44,7 @@ export default function Payment() {
     {
       title: translate('Date'),
       dataIndex: 'date',
+      responsive: ['sm'],
       render: (date) => {
         return dayjs(date).format(dateFormat);
       },
@@ -55,10 +56,12 @@ export default function Payment() {
     {
       title: translate('year'),
       dataIndex: ['invoice', 'year'],
+      responsive: ['md'],
     },
     {
       title: translate('Payment Mode'),
       dataIndex: ['paymentMode', 'name'],
+      responsive: ['md'],
     },
   ];
 
