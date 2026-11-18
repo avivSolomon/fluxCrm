@@ -4,7 +4,7 @@ const rateLimit = require('express-rate-limit');
 // Brute-force protection on login (skipped under test to keep suites deterministic)
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 20,
+  max: Number(process.env.LOGIN_RATE_LIMIT) || 20, // raise for automated E2E runs only
   standardHeaders: true,
   legacyHeaders: false,
   skip: () => process.env.NODE_ENV === 'test',

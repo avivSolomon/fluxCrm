@@ -6,6 +6,7 @@ import { Line, Pie, Column } from '@ant-design/plots';
 
 import { request } from '@/request';
 import useLanguage from '@/locale/useLanguage';
+import { getCurrentLangCode } from '@/locale/language';
 import { useMoney } from '@/settings';
 
 /**
@@ -62,8 +63,18 @@ export default function AnalyticsModule() {
   const totalRevenue = monthlyRevenue.reduce((sum, m) => sum + (m.total || 0), 0);
   const totalInvoices = statusBreakdown.reduce((sum, s) => sum + (s.count || 0), 0);
 
+  // Month names in the UI language (e.g. "דצמ׳ 2025" in Hebrew) from the neutral "YYYY-MM" key.
+  const monthFormat = new Intl.DateTimeFormat(getCurrentLangCode() === 'he_il' ? 'he-IL' : 'en-US', {
+    month: 'short',
+    year: 'numeric',
+  });
+  const revenueSeries = monthlyRevenue.map((m) => ({
+    ...m,
+    label: m.period ? monthFormat.format(new Date(`${m.period}-15T12:00:00`)) : m.label,
+  }));
+
   const lineConfig = {
-    data: monthlyRevenue,
+    data: revenueSeries,
     xField: 'label',
     yField: 'total',
     smooth: true,

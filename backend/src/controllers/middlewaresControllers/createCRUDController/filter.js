@@ -6,6 +6,15 @@ const filter = async (Model, req, res) => {
       message: 'filter not provided correctly',
     });
   }
+  // Reject MongoDB operator injection: Express parses ?equal[$ne]=x into an object.
+  // Only plain values are allowed (same rule as paginatedList).
+  if (typeof req.query.equal === 'object' || typeof req.query.filter !== 'string') {
+    return res.status(400).json({
+      success: false,
+      result: null,
+      message: 'Invalid filter value',
+    });
+  }
   const result = await Model.find({
     removed: false,
   })

@@ -1,0 +1,11 @@
+{
+  "name": "fluxcrm-e2e",
+  "private": true,
+  "description": "Browser end-to-end test of Ram's flow (language preference + analytics) against a running FluxCRM",
+  "scripts": {
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.1"
+  }
+}
