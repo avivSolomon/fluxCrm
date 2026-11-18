@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { Tag } from 'antd';
+import { Tag, Grid } from 'antd';
 import useLanguage from '@/locale/useLanguage';
 import { tagColor } from '@/utils/statusTagColor';
 
@@ -8,6 +8,7 @@ import InvoiceDataTableModule from '@/modules/InvoiceModule/InvoiceDataTableModu
 
 export default function Invoice() {
   const translate = useLanguage();
+  const screens = Grid.useBreakpoint();
   const { dateFormat } = useDate();
   const entity = 'invoice';
   const { moneyFormatter } = useMoney();
@@ -26,6 +27,16 @@ export default function Invoice() {
     {
       title: translate('Client'),
       dataIndex: ['client', 'name'],
+      // On phones the status column is hidden; show the status tag under the client name instead.
+      render: (name, record) =>
+        screens.sm ? (
+          name
+        ) : (
+          <>
+            <div>{name}</div>
+            <Tag color={tagColor(record.status).color}>{translate(record.status)}</Tag>
+          </>
+        ),
     },
     {
       title: translate('Date'),
@@ -77,6 +88,7 @@ export default function Invoice() {
     {
       title: translate('Status'),
       dataIndex: 'status',
+      responsive: ['sm'],
       render: (status) => <Tag color={tagColor(status).color}>{translate(status)}</Tag>,
     },
     {

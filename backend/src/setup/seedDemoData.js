@@ -37,7 +37,16 @@ const CLIENTS = [
 const STATUSES = ['draft', 'pending', 'sent', 'refunded', 'cancelled', 'on hold'];
 const PAY_STATUSES = ['unpaid', 'paid', 'partially'];
 
-const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+// Deterministic pseudo-random numbers (mulberry32): every seed run produces the SAME demo data,
+// so screenshots in the project book match what the demo shows.
+let seedState = 20260101;
+const random = () => {
+  seedState = (seedState + 0x6d2b79f5) | 0;
+  let t = Math.imul(seedState ^ (seedState >>> 15), 1 | seedState);
+  t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+  return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+};
+const rand = (min, max) => Math.floor(random() * (max - min + 1)) + min;
 const pick = (arr) => arr[rand(0, arr.length - 1)];
 
 async function seed() {

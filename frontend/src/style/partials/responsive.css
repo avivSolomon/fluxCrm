@@ -77,6 +77,13 @@
   }
 }
 
+@media (max-width: 767px) {
+  /* invoice items: column titles are redundant, every input has a placeholder */
+  .itemsHeader {
+    display: none;
+  }
+}
+
 @media (min-width: 768px) and (max-width: 1099px) {
   .ant-layout-content {
     padding-inline: 24px !important;
