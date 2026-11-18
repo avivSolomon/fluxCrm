@@ -1,0 +1,28 @@
+<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><link rel="stylesheet" href="style.css"></head><body>
+<h1>זרימה מקצה לקצה — רם: אנליטיקה, ייצוא CSV והעדפת שפה</h1>
+<div class="lane fe">Frontend</div>
+<div class="row">
+<div class="box fe"><b>1. מסך</b>AnalyticsModule: בורר טווח חודשים, כפתור "ייצוא CSV", גרפים<small>modules/AnalyticsModule/index.jsx</small></div>
+<div class="arrow">←</div>
+<div class="box fe"><b>2. קריאת API</b>request.analytics / analyticsExport (axios + JWT)<small>request/request.js</small></div>
+</div>
+<div class="lane be">Backend</div>
+<div class="row">
+<div class="box be"><b>3. נתיב + ולידציה</b>GET /api/invoice/analytics?from&amp;to<br>Joi: תאריכים, עד 36 חודשים<small>routes/appRoutes/appApi.js</small></div>
+<div class="arrow">←</div>
+<div class="box be"><b>4. בקר + לוגיקה</b>3 אגרגציות, סדרת חודשים רציפה, בניית CSV<small>invoiceController/analytics.js</small></div>
+</div>
+<div class="lane db">Database</div>
+<div class="row">
+<div class="box db"><b>5. MongoDB</b>Invoice ← $match · $group · $sort · $lookup ← Client</div>
+<div class="arrow">←</div>
+<div class="box t"><b>6. חזרה למסך</b>JSON ← גרף קו / עוגה / עמודות; או קובץ CSV להורדה</div>
+</div>
+<div class="lane t">העדפת שפה (אותה שרשרת, נתיב אחר)</div>
+<div class="row">
+<div class="box fe"><b>בורר שפה</b>LanguageSwitcher<small>apps/Header</small></div><div class="arrow">←</div>
+<div class="box be"><b>PATCH</b>/api/admin/profile/language<br>Joi: en_us | he_il</div><div class="arrow">←</div>
+<div class="box db"><b>Admin.language</b>נשמר ב-MongoDB</div><div class="arrow">←</div>
+<div class="box fe"><b>התחברות הבאה</b>השרת מחזיר language ← RTL</div>
+</div>
+</body></html>

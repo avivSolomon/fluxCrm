@@ -1,0 +1,9 @@
+<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><link rel="stylesheet" href="style.css">
+<style>.seq{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:8px}.col{border-inline-start:2px dashed #94a3b8;min-height:430px;padding:0 8px;position:relative}.hd{background:#1F3864;color:#fff;text-align:center;border-radius:8px;padding:8px;font-weight:bold;font-size:16px}.m{background:#EAF2FB;border:1.5px solid #2E75B6;border-radius:8px;margin:14px 0;padding:8px;font-size:14.5px;line-height:1.3}.m.r{background:#E8F5E9;border-color:#2E7D32}</style></head><body>
+<h1>תרשים רצף — טעינת מסך האנליטיקה</h1>
+<div class="seq">
+<div class="col"><div class="hd">משתמש / React</div><div class="m">1. פותח את "אנליטיקות" ובוחר טווח</div><div class="m r" style="margin-top:250px">8. מציג גרפים וסכומים</div></div>
+<div class="col"><div class="hd">Express</div><div class="m" style="margin-top:50px">2. GET /api/invoice/analytics?from&amp;to + JWT</div><div class="m">3. isValidAuthToken ← Joi על from/to</div><div class="m r" style="margin-top:130px">7. 200 <span dir="ltr" style="display:inline-block">{ monthlyRevenue, statusBreakdown, topClients }</span></div></div>
+<div class="col"><div class="hd">בקר analytics</div><div class="m" style="margin-top:130px">4. 3 אגרגציות</div><div class="m">6. משלים חודשים ריקים ל-0</div></div>
+<div class="col"><div class="hd">MongoDB</div><div class="m" style="margin-top:185px">5. <span dir="ltr" style="display:inline-block">$match, $group, $sort, $limit, $lookup</span></div></div>
+</div></body></html>

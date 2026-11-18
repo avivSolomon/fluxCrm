@@ -1,0 +1,11 @@
+<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><link rel="stylesheet" href="style.css"></head><body>
+<h1>ארכיטקטורת שלוש שכבות של FluxCRM</h1>
+<div class="row">
+<div class="box fe"><b>שכבת תצוגה — דפדפן</b>React 18 + Redux + Ant Design<small>frontend/dist · localhost:3000</small></div>
+<div class="arrow">⇄</div>
+<div class="box be"><b>שכבת לוגיקה — שרת</b>Node.js + Express<br>JWT · Joi · בקרים · נתיבים<small>backend/src · localhost:8888 · /api/*</small></div>
+<div class="arrow">⇄</div>
+<div class="box db"><b>שכבת נתונים</b>MongoDB + Mongoose<br>Client · Invoice · Payment · Admin<small>127.0.0.1:27017 · fluxcrm</small></div>
+</div>
+<div class="row"><div class="box t" style="flex:1">התקשורת בין התצוגה ללוגיקה: HTTP + JSON (REST). כל נקודות ה-API (פרט להתחברות) מוגנות ב-JWT בכותרת <span style="direction:ltr;display:inline-block">Authorization: Bearer</span></div></div>
+</body></html>
