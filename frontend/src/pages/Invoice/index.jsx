@@ -77,11 +77,13 @@ export default function Invoice() {
     {
       title: translate('Status'),
       dataIndex: 'status',
+      render: (status) => <Tag color={tagColor(status).color}>{translate(status)}</Tag>,
     },
     {
       title: translate('Payment'),
       dataIndex: 'paymentStatus',
       responsive: ['md'],
+      render: (status) => <Tag color={tagColor(status).color}>{translate(status)}</Tag>,
     },
   ];
 

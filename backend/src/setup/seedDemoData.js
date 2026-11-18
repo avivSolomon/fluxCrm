@@ -23,6 +23,7 @@ for (const filePath of globSync('./src/models/**/*.js')) {
 const Admin = mongoose.model('Admin');
 const Client = mongoose.model('Client');
 const Invoice = mongoose.model('Invoice');
+const Payment = mongoose.model('Payment');
 
 const CLIENTS = [
   'Aurora Studios',
@@ -48,12 +49,15 @@ async function seed() {
     }
 
     // clean previous demo data
+    await Payment.deleteMany({ description: '[DEMO]' });
     await Invoice.deleteMany({ notes: '[DEMO]' });
     await Client.deleteMany({ name: { $in: CLIENTS } });
 
     const clientDocs = await Client.insertMany(
-      CLIENTS.map((name) => ({
+      CLIENTS.map((name, i) => ({
         name,
+        phone: '03-555-01' + (10 + i),
+        address: 'Herzl ' + (10 + i * 7) + ', Tel Aviv',
         email: name.toLowerCase().replace(/[^a-z]/g, '') + '@example.com',
         country: 'IL',
         createdBy: admin._id,
@@ -118,7 +122,24 @@ async function seed() {
       }
     }
 
-    await Invoice.insertMany(invoices);
+    const savedInvoices = await Invoice.insertMany(invoices);
+
+    // one payment per invoice that has been (partly) paid
+    let payNumber = 1;
+    const payments = savedInvoices
+      .filter((inv) => inv.credit > 0)
+      .map((inv) => ({
+        createdBy: admin._id,
+        number: payNumber++,
+        client: inv.client,
+        invoice: inv._id,
+        date: inv.date,
+        amount: inv.credit,
+        currency: 'USD',
+        description: '[DEMO]',
+      }));
+    await Payment.insertMany(payments);
+    console.log('👍 ' + payments.length + ' demo payments created');
     console.log(`👍 ${invoices.length} demo invoices created across 12 months`);
     console.log('🥳 Demo data seeded : Success!');
     process.exit();
