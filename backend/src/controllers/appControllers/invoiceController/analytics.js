@@ -39,6 +39,7 @@ const resolveRange = (query) => {
  *   1. monthlyRevenue  – total invoiced amount per month (continuous series, empty months = 0)
  *   2. statusBreakdown – invoice count grouped by status
  *   3. topClients      – the 5 clients with the highest invoiced revenue
+ *   4. comparison      – the selected window vs. the window of the same length right before it
  */
 const buildAnalytics = async ({ start, end, months }) => {
   const startDate = start.toDate();
@@ -93,7 +94,38 @@ const buildAnalytics = async ({ start, end, months }) => {
     },
   ]);
 
-  return { monthlyRevenue, statusBreakdown, topClients };
+  // 4. Period comparison: one aggregation over both windows; $cond labels each
+  // invoice "current" or "previous" by its date, then $group sums each side.
+  const prevStart = moment(start).subtract(months, 'months').toDate();
+  const compareRaw = await Model.aggregate([
+    { $match: { removed: false, date: { $gte: prevStart, $lte: endDate } } },
+    {
+      $group: {
+        _id: { $cond: [{ $gte: ['$date', startDate] }, 'current', 'previous'] },
+        total: { $sum: '$total' },
+        count: { $sum: 1 },
+      },
+    },
+  ]);
+  const side = (key) => {
+    const found = compareRaw.find((r) => r._id === key);
+    return { total: found ? found.total : 0, count: found ? found.count : 0 };
+  };
+  const current = side('current');
+  const previous = side('previous');
+  const comparison = {
+    current,
+    previous,
+    previousFrom: moment(prevStart).format('YYYY-MM'),
+    previousTo: moment(start).subtract(1, 'months').format('YYYY-MM'),
+    // null when there is nothing to compare against (avoids dividing by zero)
+    changePercent:
+      previous.total === 0
+        ? null
+        : Math.round(((current.total - previous.total) / previous.total) * 1000) / 10,
+  };
+
+  return { monthlyRevenue, statusBreakdown, topClients, comparison };
 };
 
 const badRequest = (res, message) =>
@@ -119,12 +151,15 @@ const exportCsv = async (req, res) => {
   const range = resolveRange(req.query);
   if (range.error) return badRequest(res, range.error);
 
-  const { monthlyRevenue, statusBreakdown, topClients } = await buildAnalytics(range);
+  const { monthlyRevenue, statusBreakdown, topClients, comparison } = await buildAnalytics(range);
   const lines = [
     ['section', 'name', 'total', 'count'],
     ...monthlyRevenue.map((m) => ['monthly_revenue', m.label, m.total, m.count]),
     ...statusBreakdown.map((s) => ['status', s.status, '', s.count]),
     ...topClients.map((c) => ['top_client', c.name, c.total, c.count]),
+    ['comparison', 'current_period', comparison.current.total, comparison.current.count],
+    ['comparison', 'previous_period', comparison.previous.total, comparison.previous.count],
+    ['comparison', 'change_percent', comparison.changePercent ?? '', ''],
   ].map((row) => row.map(csvCell).join(','));
 
   res.setHeader('Content-Type', 'text/csv; charset=utf-8');

@@ -80,16 +80,22 @@ npm run dev        # Vite עם רענון חי (3000)
 
 ```bash
 cd backend
-npm test           # כל הבדיקות (דורש MongoDB פועל)
+npm test           # 34 בדיקות שרת (דורש MongoDB פועל)
 npm run test:unit  # בדיקות יחידה בלבד (בלי MongoDB)
 ```
 
 ```bash
 cd frontend
+npm test           # 11 בדיקות רכיבים (Vitest, בלי שרת)
 npm run lint:own   # בדיקת סגנון לקבצים שפיתחנו
 ```
 
-ה-CI ב-GitHub (`.github/workflows/ci.yml`) מריץ את אותן בדיקות על Node 20 ו-22.
+```bash
+cd e2e
+npx playwright test   # 7 בדיקות דפדפן (כשהמערכת רצה)
+```
+
+ה-CI ב-GitHub (`.github/workflows/ci.yml`) מריץ את בדיקות השרת על Node 20 ו-22, את בדיקות הרכיבים והבנייה, ואת בדיקות הדפדפן מול המערכת המלאה.
 
 ---
 

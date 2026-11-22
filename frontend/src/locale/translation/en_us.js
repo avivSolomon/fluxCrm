@@ -1,5 +1,8 @@
 const lang = {
   export_csv: 'Export CSV',
+  previous_period: 'Previous period',
+  vs_previous_period: 'vs. previous period',
+  no_previous_data: 'No earlier data',
   sign_up: 'Sign Up',
   manage_your_company_with: 'Manage Your Company With',
   all_in_one_tool: 'All In One Tool',

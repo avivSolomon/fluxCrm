@@ -9,12 +9,15 @@ import useLanguage from '@/locale/useLanguage';
 import { getCurrentLangCode } from '@/locale/language';
 import { useMoney } from '@/settings';
 
+import PeriodComparison from './PeriodComparison';
+
 /**
  * FluxCRM Analytics page (original addition).
  * Renders three charts from GET /api/invoice/analytics:
  *   - Line   : invoiced revenue per month (last 12 months)
  *   - Pie    : invoice count by status
  *   - Column : top 5 clients by revenue
+ * plus a comparison with the period of the same length right before the range.
  */
 export default function AnalyticsModule() {
   const translate = useLanguage();
@@ -33,6 +36,7 @@ export default function AnalyticsModule() {
     monthlyRevenue: [],
     statusBreakdown: [],
     topClients: [],
+    comparison: null,
   });
 
   useEffect(() => {
@@ -58,16 +62,19 @@ export default function AnalyticsModule() {
     if (dates && dates[0] && dates[1]) setRange(dates);
   };
 
-  const { monthlyRevenue, statusBreakdown, topClients } = data;
+  const { monthlyRevenue, statusBreakdown, topClients, comparison } = data;
 
   const totalRevenue = monthlyRevenue.reduce((sum, m) => sum + (m.total || 0), 0);
   const totalInvoices = statusBreakdown.reduce((sum, s) => sum + (s.count || 0), 0);
 
   // Month names in the UI language (e.g. "דצמ׳ 2025" in Hebrew) from the neutral "YYYY-MM" key.
-  const monthFormat = new Intl.DateTimeFormat(getCurrentLangCode() === 'he_il' ? 'he-IL' : 'en-US', {
-    month: 'short',
-    year: 'numeric',
-  });
+  const monthFormat = new Intl.DateTimeFormat(
+    getCurrentLangCode() === 'he_il' ? 'he-IL' : 'en-US',
+    {
+      month: 'short',
+      year: 'numeric',
+    }
+  );
   const revenueSeries = monthlyRevenue.map((m) => ({
     ...m,
     label: m.period ? monthFormat.format(new Date(`${m.period}-15T12:00:00`)) : m.label,
@@ -144,7 +151,7 @@ export default function AnalyticsModule() {
       ) : (
         <>
           <Row gutter={[32, 32]}>
-            <Col xs={24} md={12}>
+            <Col xs={24} md={8}>
               <div className="whiteBox shadow pad20">
                 <Statistic
                   title={translate('total_revenue_12_months')}
@@ -152,9 +159,18 @@ export default function AnalyticsModule() {
                 />
               </div>
             </Col>
-            <Col xs={24} md={12}>
+            <Col xs={24} md={8}>
               <div className="whiteBox shadow pad20">
                 <Statistic title={translate('Invoices')} value={totalInvoices} />
+              </div>
+            </Col>
+            <Col xs={24} md={8}>
+              <div className="whiteBox shadow pad20">
+                <PeriodComparison
+                  comparison={comparison}
+                  translate={translate}
+                  formatMoney={(amount) => moneyFormatter({ amount })}
+                />
               </div>
             </Col>
           </Row>

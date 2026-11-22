@@ -4,6 +4,7 @@ const cors = require('cors');
 const compression = require('compression');
 
 const cookieParser = require('cookie-parser');
+const rateLimit = require('express-rate-limit');
 
 const coreAuthRouter = require('./routes/coreRoutes/coreAuth');
 const coreApiRouter = require('./routes/coreRoutes/coreApi');
@@ -37,6 +38,17 @@ app.use(compression());
 
 // // default options
 // app.use(fileUpload());
+
+// General rate limit for every API request (per client IP, per minute).
+// The stricter login limit lives in coreAuth.js. Override with API_RATE_LIMIT.
+const apiLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: Number(process.env.API_RATE_LIMIT) || 300,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, result: null, message: 'Too many requests, try again in a minute.' },
+});
+app.use('/api', apiLimiter);
 
 // Here our API Routes
 

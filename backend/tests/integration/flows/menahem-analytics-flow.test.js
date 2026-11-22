@@ -57,7 +57,19 @@ describe('E2E flow: analytics & reports (Menahem)', () => {
     expect(csv.status).toBe(200);
     expect(csv.text).toContain('"top_client","Flow Client","400","2"');
 
-    // 6) invalid input is rejected, not silently accepted
+    // 6) period comparison: Feb-Mar (300) vs. the two months before, Dec-Jan (100)
+    const cmp = await request(app)
+      .get('/api/invoice/analytics?from=2026-02-01&to=2026-03-31')
+      .set(auth);
+    expect(cmp.body.result.comparison).toMatchObject({
+      current: { total: 300, count: 1 },
+      previous: { total: 100, count: 1 },
+      previousFrom: '2025-12',
+      previousTo: '2026-01',
+      changePercent: 200,
+    });
+
+    // 7) invalid input is rejected, not silently accepted
     const bad = await request(app).get('/api/invoice/analytics?from=banana').set(auth);
     expect(bad.status).toBe(400);
   });

@@ -20,7 +20,7 @@ Full instructions (Hebrew): [STUDENTS-GUIDE.md](STUDENTS-GUIDE.md). Stop with `s
 | Analytics, CSV export, user language preference, responsive layout | screen → `request` → route/controller → MongoDB aggregation / `Admin.language` → back to the screen (see the project book) |
 | MongoDB aggregation, JWT authentication, automated tests | `backend/src/controllers/appControllers/invoiceController/analytics.js`, `createAuthMiddleware`, `backend/tests` |
 
-Tests: `cd backend && npm test` (needs MongoDB). CI: `.github/workflows/ci.yml`.
+Tests: `cd backend && npm test` (34 server tests, needs MongoDB), `cd frontend && npm test` (11 component tests), `cd e2e && npx playwright test` (7 browser tests, app running). CI: `.github/workflows/ci.yml`.
 
 ## Attribution and license
 
