@@ -46,11 +46,13 @@ jobs:
       - run: npm ci
       - name: Lint (files developed by the students)
         run: npm run lint:own
+      - name: Component tests (Vitest)
+        run: npm test
       - name: Build
         run: npm run build
 
   e2e:
-    # Browser test of Ram's end-to-end flow against the real stack (MongoDB + backend + built frontend).
+    # Browser tests (Ram's flow + every main screen) against the real stack (MongoDB + backend + built frontend).
     runs-on: ubuntu-latest
     needs: [backend, frontend]
     services:
@@ -63,6 +65,7 @@ jobs:
       NODE_ENV: development
       PUBLIC_SERVER_FILE: http://localhost:8888/
       LOGIN_RATE_LIMIT: '500'
+      API_RATE_LIMIT: '3000'
       CI: 'true'
     steps:
       - uses: actions/checkout@v4

@@ -47,26 +47,25 @@ const create = async (req, res) => {
   body['paymentStatus'] = paymentStatus;
   body['createdBy'] = req.admin._id;
 
-  // Creating a new document in the collection
-  const result = await new Model(body).save();
-  const fileId = 'invoice-' + result._id + '.pdf';
-  const updateResult = await Model.findOneAndUpdate(
-    { _id: result._id },
-    { pdf: fileId },
-    {
-      new: true,
-    }
-  ).exec();
-  // Returning successfull response
+  // One write for the invoice: the id (and so the PDF file name) is known before
+  // saving, so the document is stored complete in a single atomic insert instead
+  // of an insert followed by a separate update.
+  const invoice = new Model(body);
+  invoice.pdf = 'invoice-' + invoice._id + '.pdf';
+  await invoice.save();
+  // Read it back so the response is autopopulated exactly as before (a read, not a write).
+  const result = await Model.findById(invoice._id).exec();
 
-  increaseBySettingKey({
+  // The invoice counter is advanced only after the invoice was saved, with an
+  // atomic $inc, so a failed save never consumes a number.
+  await increaseBySettingKey({
     settingKey: 'last_invoice_number',
   });
 
   // Returning successfull response
   return res.status(200).json({
     success: true,
-    result: updateResult,
+    result,
     message: 'Invoice created successfully',
   });
 };

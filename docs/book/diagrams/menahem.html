@@ -9,13 +9,13 @@
 <div class="lane be">כל בקשה מוגנת</div>
 <div class="row">
 <div class="box be"><b>4. middleware</b>isValidAuthToken: חתימה + loggedSessions<br>401 אם חסר, לא תקף או התנתקות<small>isValidAuthToken.js</small></div><div class="arrow">←</div>
-<div class="box be"><b>5. aggregation</b>$match → $group → $sort → $limit → $lookup<small>invoiceController/analytics.js</small></div><div class="arrow">←</div>
+<div class="box be"><b>5. aggregation</b><span dir="ltr">$match → $group → $sort → $limit → $lookup</span><br>השוואת תקופות: <span dir="ltr">$group</span> לפי <span dir="ltr">$cond</span><small>invoiceController/analytics.js</small></div><div class="arrow">←</div>
 <div class="box db"><b>6. MongoDB</b>החישוב מתבצע במסד</div>
 </div>
 <div class="lane t">בדיקות אוטומטיות (Jest + supertest, מסד fluxcrm_test)</div>
 <div class="row">
 <div class="box t"><b>יחידה</b>calculate: 4 בדיקות</div><div class="arrow">+</div>
-<div class="box t"><b>אינטגרציה</b>התחברות · לקוחות · אנליטיקה · שפה: 20 בדיקות</div><div class="arrow">+</div>
+<div class="box t"><b>אינטגרציה</b>התחברות · לקוחות · חשבוניות · אנליטיקה · שפה · אבטחה: 28 בדיקות</div><div class="arrow">+</div>
 <div class="box t"><b>זרימה מלאה</b>2 תרחישים (אחד לכל תלמיד)</div>
 </div>
 </body></html>

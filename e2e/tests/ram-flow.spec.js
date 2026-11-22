@@ -58,7 +58,10 @@ test('language preference is saved on the server and comes back after login', as
   // 5-6. next login on a "new device" (local preference cleared) comes back in Hebrew
   await page.goto('/logout');
   await page.waitForURL('**/login', { timeout: 15_000 });
-  await page.evaluate(() => localStorage.removeItem('fluxcrm_language'));
+  // the logout page may still be redirecting, so retry until the page is stable
+  await expect(async () => {
+    await page.evaluate(() => localStorage.removeItem('fluxcrm_language'));
+  }).toPass({ timeout: 10_000 });
   await uiLogin(page);
   await expect(page.locator('html')).toHaveAttribute('dir', 'rtl', { timeout: 15_000 });
 });
@@ -73,17 +76,25 @@ test('phone width: menu button and no horizontal page scroll', async ({ page }) 
 });
 
 test('analytics screen shows totals, charts and requests the CSV export', async ({ page }) => {
+  // Headless Edge closes when a blob file is actually saved, so record the save the screen asks for
+  // (a link to a blob: URL with a file name) instead of letting the browser write the file.
+  await page.addInitScript(() => {
+    window.__saved = [];
+    HTMLAnchorElement.prototype.click = function () {
+      if (this.href.startsWith('blob:')) window.__saved.push(this.download || 'unnamed');
+    };
+  });
   await uiLogin(page);
   await page.goto('/analytics');
-  await expect(page.getByText('Revenue Last 12 Months')).toBeVisible({ timeout: 20_000 });
+  await expect(page.getByText('Revenue by month')).toBeVisible({ timeout: 20_000 });
   await expect(page.locator('canvas').first()).toBeVisible();
 
   // The button calls GET /analytics/export with the JWT; check the response the screen receives.
-  // (Saving the file is the browser's job; headless Edge closes on blob downloads, so we stop at the response.)
   const [response] = await Promise.all([
     page.waitForResponse((r) => r.url().includes('/analytics/export')),
     page.getByRole('button', { name: /Export CSV/ }).click(),
   ]);
   expect(response.status()).toBe(200);
   expect(response.headers()['content-type']).toContain('text/csv');
+  await expect.poll(() => page.evaluate(() => window.__saved)).toEqual(['fluxcrm-analytics.csv']);
 });
