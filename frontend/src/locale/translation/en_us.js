@@ -1,5 +1,7 @@
 const lang = {
   export_csv: 'Export CSV',
+  total_revenue_in_range: 'Total revenue (selected range)',
+  revenue_by_month: 'Revenue by month',
   previous_period: 'Previous period',
   vs_previous_period: 'vs. previous period',
   no_previous_data: 'No earlier data',

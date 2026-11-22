@@ -14,7 +14,7 @@ import PeriodComparison from './PeriodComparison';
 /**
  * FluxCRM Analytics page (original addition).
  * Renders three charts from GET /api/invoice/analytics:
- *   - Line   : invoiced revenue per month (last 12 months)
+ *   - Line   : invoiced revenue per month (selected range, default: last 12 months)
  *   - Pie    : invoice count by status
  *   - Column : top 5 clients by revenue
  * plus a comparison with the period of the same length right before the range.
@@ -154,7 +154,7 @@ export default function AnalyticsModule() {
             <Col xs={24} md={8}>
               <div className="whiteBox shadow pad20">
                 <Statistic
-                  title={translate('total_revenue_12_months')}
+                  title={translate('total_revenue_in_range')}
                   value={moneyFormatter({ amount: totalRevenue })}
                 />
               </div>
@@ -181,7 +181,7 @@ export default function AnalyticsModule() {
             <Col xs={24}>
               <div className="whiteBox shadow pad20">
                 <h3 style={{ color: '#22075e', marginBottom: 15 }}>
-                  {translate('revenue_last_12_months')}
+                  {translate('revenue_by_month')}
                 </h3>
                 <div dir="ltr">
                   {hasRevenue ? (
