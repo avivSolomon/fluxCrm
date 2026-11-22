@@ -1,25 +1,27 @@
-<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><link rel="stylesheet" href="style.css"></head><body>
-<h1>זרימה מקצה לקצה — רם</h1>
-<div class="lane fe">זרימה ראשית: העדפת שפה (עברית / אנגלית)</div>
+<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><link rel="stylesheet" href="style.css">
+<style>.legend{display:flex;gap:18px;margin:0 0 6px;font-size:16px}.legend span{display:inline-flex;align-items:center;gap:6px}.legend i{width:18px;height:18px;border-radius:4px;display:inline-block}.ram{background:#E8F5E9;border-color:#2E7D32}.men{background:#FFF3E0;border-color:#E65100}.mdb{background:#F3E5F5;border-color:#6A1B9A}</style></head><body>
+<h1>זרימת השפה מקצה לקצה — ממשק: רם · שרת ומסד: מנחם</h1>
+<div class="legend"><span><i class="box ram" style="padding:0"></i>רם — צד הלקוח</span><span><i class="box men" style="padding:0"></i>מנחם — צד השרת</span><span><i class="box mdb" style="padding:0"></i>מסד הנתונים (מנחם)</span></div>
+<div class="lane fe">זרימת השפה (עברית / אנגלית)</div>
 <div class="row">
-<div class="box fe"><b>1. מסך</b>בורר שפה בהדר<small>apps/Header/LanguageSwitcher.jsx</small></div>
+<div class="box ram"><b>1. מסך</b>בורר שפה בהדר<small>apps/Header/LanguageSwitcher.jsx</small></div>
 <div class="arrow">←</div>
-<div class="box fe"><b>2. קריאת API</b>request.updateLanguage (axios + JWT)<small>request/request.js</small></div>
+<div class="box ram"><b>2. קריאת API</b>request.updateLanguage (axios + JWT)<small>request/request.js</small></div>
 <div class="arrow">←</div>
-<div class="box be"><b>3. נתיב + בקר</b>PATCH /api/admin/profile/language<br>Joi: en_us | he_il, אחרת 400<small>adminController/updateLanguage.js</small></div>
+<div class="box men"><b>3. נתיב + בקר</b>PATCH /api/admin/profile/language<br>Joi: en_us | he_il, אחרת 400<small>adminController/updateLanguage.js</small></div>
 </div>
 <div class="row">
-<div class="box db"><b>4. מסד נתונים</b>Admin.language נשמר ב-MongoDB<small>models/coreModels/Admin.js</small></div>
+<div class="box mdb"><b>4. מסד נתונים</b>Admin.language נשמר ב-MongoDB<small>models/coreModels/Admin.js</small></div>
 <div class="arrow">←</div>
-<div class="box be"><b>5. התחברות הבאה</b>POST /api/login מחזיר language<small>createAuthMiddleware/authUser.js</small></div>
+<div class="box men"><b>5. התחברות הבאה</b>POST /api/login מחזיר language<small>createAuthMiddleware/authUser.js</small></div>
 <div class="arrow">←</div>
-<div class="box fe"><b>6. חזרה למסך</b>השפה מוחלת, המסך עובר ל-RTL<small>redux/auth/actions.js</small></div>
+<div class="box ram"><b>6. חזרה למסך</b>השפה מוחלת, המסך עובר ל-RTL<small>redux/auth/actions.js</small></div>
 </div>
-<div class="lane t">זרימה משנית: מסך האנליטיקה וייצוא CSV</div>
+<div class="lane t">זרימת האנליטיקה וייצוא CSV</div>
 <div class="row">
-<div class="box fe"><b>מסך</b>בורר טווח, 3 גרפים, כפתור CSV<small>modules/AnalyticsModule</small></div><div class="arrow">←</div>
-<div class="box be"><b>API + ולידציה</b>GET /api/invoice/analytics?from&amp;to<br>Joi: עד 36 חודשים<small>invoiceController/analytics.js</small></div><div class="arrow">←</div>
-<div class="box db"><b>אגרגציה במסד</b>סינון, קיבוץ, מיון (פירוט: מנחם)</div><div class="arrow">←</div>
-<div class="box fe"><b>חזרה למסך</b>JSON ← גרפים; או קובץ CSV</div>
+<div class="box ram"><b>מסך</b>בורר טווח, 3 גרפים, כפתור CSV<small>modules/AnalyticsModule</small></div><div class="arrow">←</div>
+<div class="box men"><b>API + ולידציה</b>GET /api/invoice/analytics?from&amp;to<br>Joi: עד 36 חודשים<small>invoiceController/analytics.js</small></div><div class="arrow">←</div>
+<div class="box mdb"><b>אגרגציה במסד</b><span dir="ltr" style="display:inline-block">$match, $group, $sort, $lookup</span></div><div class="arrow">←</div>
+<div class="box ram"><b>חזרה למסך</b>JSON ← גרפים; או קובץ CSV</div>
 </div>
 </body></html>
